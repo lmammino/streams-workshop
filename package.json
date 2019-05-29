@@ -1,0 +1,32 @@
+{
+  "name": "streams-workshop",
+  "version": "1.0.0",
+  "description": "A workshop on Node.js Streams",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lmammino/streams-workshop.git"
+  },
+  "keywords": [],
+  "author": "Luciano Mammino",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lmammino/streams-workshop/issues"
+  },
+  "homepage": "https://github.com/lmammino/streams-workshop#readme",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0"
+  },
+  "dependencies": {
+    "emoji": "^0.3.2",
+    "readable-stream": "^3.4.0"
+  }
+}
