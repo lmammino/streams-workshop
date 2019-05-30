@@ -5,5 +5,5 @@
 
 
 
-| [⬅️ 07 - Projects](/07-projects/README.md) | [🏠](/README.md)| - |
+| [⬅️ 07 - Stream patterns](/07-stream-patterns/README.md) | [🏠](/README.md)| - |
 |:--------------|:------:|------------------------------------------------:|
