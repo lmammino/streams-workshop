@@ -27,12 +27,12 @@ You can use this script as follows:
 node buffer-copy <source-file> <dest-file>
 ```
 
-> \[🎭 PLAY\]
+> ** 🎭 PLAY **  
 > Play with this a bit and try to copy some files in your machine.
 
 But did you ever wonder what happens when you try to copy a big file (more than 1.5Gb)?
 
-> \[🎭 PLAY\]
+> ** 🎭 PLAY **  
 > Generate a big file (3gb) called file.txt in your machine with:
 >
 > ```bash
