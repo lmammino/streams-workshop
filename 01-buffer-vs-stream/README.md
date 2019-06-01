@@ -49,6 +49,29 @@ ERR_FS_FILE_TOO_LARGE: File size is greater than possible Buffer
 
 Why is this happening?
 
+Essentially because when we use `fs.readFileSync` we load all the binary content from the file in memory into a `Buffer` object. Buffers are limited in size as they live in memory.
+
+Let's try to explain this better with an analogy...
+
+Imagine instead of copying bytes of data you have to help Mario moving blocks from one place to another:
+
+![Mario trying to move some blocks](./images/buffer-analogy-001.jpg)
+
+Mario can lift some blocks:
+
+![Mario can lift some blocks](./images/buffer-analogy-002.jpg)
+
+But, if you have to move many blocks, he can't definitely move all of them in one go:
+
+![Mario can't move many blocks in one go](./images/buffer-analogy-003.jpg)
+
+So what can we do? What if we want to find an approach that works independently from the number of blocks we have to move?
+
+![Mario can move the blocks one by one, he can stream them!](./images/buffer-analogy-004.jpg)
+
+Mario can move the blocks one by one, he can stream them!
+
+
 
 
 
