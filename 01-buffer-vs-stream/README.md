@@ -77,8 +77,37 @@ Mario can move the blocks one by one, he can stream them!
 
 ## 01.2 Streaming intro
 
-...
+How can we convert our implementation into a streaming one?
 
+It's very easy actually:
+
+```javascript
+// stream-copy.js
+
+const {
+  createReadStream,
+  createWriteStream
+} = require('fs')
+
+const [,, src, dest] = process.argv
+
+// create source stream
+const srcStream = createReadStream(src)
+
+// create destination stream
+const destStream = createWriteStream(dest)
+
+// when there's data on the source stream,
+// write it to the dest stream
+// WARNING, this solution is not perfect as we will see later
+srcStream.on('data', (data) => destStream.write(data))
+```
+
+Essentially we are replacing `readFileSync` with `createReadStream` and `writeFileSync` with `createWriteStream`.
+
+`createReadStream` and `createWriteStream` are then used to create two stream instances `srcStream` and `destStream`. These objects are respectively instances of a `ReadableStream` (input) and a `WritableStream` (output) and we will talk more about these in the next chapters.
+
+...
 
 
 
