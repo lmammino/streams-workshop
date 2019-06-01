@@ -160,7 +160,10 @@ If all went as expected you should see that the total amount of memory is around
 >
 > Now you can add the breakpoint in the `console.log` line
 
-How much memory did you get? Why not to try even with the 3Gb file now?
+How much memory did you get?
+
+> **🎭 PLAY**  
+> Why not to try the same exercise with the 3Gb file?
 
 At this point you should have clear in mind why Streams are so convenient 🙂
 
