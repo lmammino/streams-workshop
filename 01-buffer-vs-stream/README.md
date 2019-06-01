@@ -1,5 +1,8 @@
 # 01 - Buffer vs Stream
 
+- [01.1 buffers intro](#011-buffers-intro)
+- [01.2 Streaming intro](#012-streaming-intro)
+
 ## 01.1 buffers intro
 
 Let's create a Node.js script to copy a file from one place to another:
@@ -72,6 +75,9 @@ So what can we do? What if we want to find an approach that works independently 
 Mario can move the blocks one by one, he can stream them!
 
 
+## 01.2 Streaming intro
+
+...
 
 
 
