@@ -36,10 +36,10 @@ node buffer-copy <source-file> <dest-file>
 But did you ever wonder what happens when you try to copy a big file (more than 1.5Gb)?
 
 > **🎭 PLAY**  
-> Generate a big file (3gb) called file.txt in your machine with:
+> Generate a big file (3gb) called `big-file.txt` in your machine with:
 >
 > ```bash
-> dd if=/dev/zero of=file.txt count=3145728 bs=3145728
+> dd if=/dev/zero of=big-file.txt count=3145728 bs=3145728
 > ```
 >
 > Now try to copy it with our previous script.
@@ -100,14 +100,20 @@ const destStream = createWriteStream(dest)
 // when there's data on the source stream,
 // write it to the dest stream
 // WARNING, this solution is not perfect as we will see later
-srcStream.on('data', (data) => destStream.write(data))
+srcStream.on('data', (chunk) => destStream.write(chunk))
 ```
 
 Essentially we are replacing `readFileSync` with `createReadStream` and `writeFileSync` with `createWriteStream`.
 
-`createReadStream` and `createWriteStream` are then used to create two stream instances `srcStream` and `destStream`. These objects are respectively instances of a `ReadableStream` (input) and a `WritableStream` (output) and we will talk more about these in the next chapters.
+`createReadStream` and `createWriteStream` are then used to create two stream instances `srcStream` and `destStream`. These objects are respectively instances of a `ReadableStream` (input) and a `WritableStream` (output) and we will talk more in detail about these in the next chapters. For now, the only important detail to understand is that streams are not *eager*, they don't read all the data in one go. The data is read in *chunks*, small portions of data. You can immediately use a chunk as soon as it is available through the `data` event. In our case, when a new chunk of data is available in the source stream we immediately write it to the destination stream. This way we never have to keep all the file content in memory.
+
+This implementation here is not perfect, there are some rough edge cases that we will discover later while discussing Writable streams in mode detail, but for now this is good enough to understand the basic principles of stream processing in Node.js!
+
+> **🎭 PLAY**  
+> Try to copy our `big-file.txt` using this new streaming implementation!
 
 ...
+
 
 
 
