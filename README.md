@@ -19,6 +19,12 @@ The workshop is divided in chapters and the first chapter starts at [`01-buffer-
 
 Every chapter will teach you a specific stream concept and offer you some examples and exercises to familiarize with that concept.
 
+You will often find 2 different types of interactive actions:
+
+- **\[🎭 PLAY\]** : commands or instructions you should spend some time with to get familiar with some concepts or APIs
+- **\[🏹 Exercise\]**: when you have to use some of the concepts you just learned to solve a programming problem. Generally every exercise will have a test that you can run to validate your solution.
+
+
 Some slides will be available to complement the workshop material.
 
 Enjoy! 🙃
