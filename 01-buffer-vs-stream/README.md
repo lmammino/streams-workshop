@@ -39,7 +39,7 @@ node buffer-copy <source-file> <dest-file>
 But did you ever wonder what happens when you try to copy a big file (more than 1.5Gb)?
 
 > **🎭 PLAY**  
-> Generate a big file (3gb) called `big-file.txt` in your machine with:
+> Generate a big file (3gb) called `assets/3Gb.bin` in your machine with:
 >
 > ```bash
 > head -c $((3*1024*1024*1024)) /dev/urandom > assets/3Gb.bin
