@@ -2,6 +2,9 @@
 
 - [01.1 buffers intro](#011-buffers-intro)
 - [01.2 Streaming intro](#012-streaming-intro)
+- [01.3 Memory comparison](#013-memory-comparison)
+- [01.4 Our friend `Buffer`](#014-our-friend-buffer)
+
 
 ## 01.1 buffers intro
 
@@ -39,7 +42,7 @@ But did you ever wonder what happens when you try to copy a big file (more than 
 > Generate a big file (3gb) called `big-file.txt` in your machine with:
 >
 > ```bash
-> dd if=/dev/zero of=big-file.txt count=3145728 bs=3145728
+> head -c $((3*1024*1024*1024)) /dev/urandom > assets/3Gb.bin
 > ```
 >
 > Now try to copy it with our previous script.
@@ -112,7 +115,59 @@ This implementation here is not perfect, there are some rough edge cases that we
 > **🎭 PLAY**  
 > Try to copy our `big-file.txt` using this new streaming implementation!
 
-...
+
+## 01.3 Memory comparison
+
+Let's now see how the two implementations (buffer and streaming) compare in terms of memory usage. We can do that by using Google Chrome developer tools.
+
+First of all let's create a 600Mb file called `assets/60mb.txt`:
+
+```bash
+head -c $((600*1024*1024)) /dev/urandom > assets/600mb.bin
+```
+
+Now let's run the buffer copy in debug mode from the directory `01-buffer-vs-stream`:
+
+```bash
+node --inspect-brk buffer-copy.js ../assets/600mb.bin ../assets/600mb.bin_copy
+```
+
+This script will pause straight away thanks to the `--inspect-brk` flag.
+
+Open Google Chrome and visit [chrome://inspect/](chrome://inspect/).
+
+Click on the **inspect** link at the bottom of the page.
+
+This should open a Chrome developer tool window.
+
+You can see that our script is currently paused. Add a breakpoint in the last line where we write the content to the destination (so that the script will stop before executing that last line). Now execute the script and see it getting paused in the last line by the breakpoint. At this point, switch to the **Memory** tab and select the option **Heap Snapshoot** and then click the button **Take Snapshot**. This operation allows you to see all the memory currently allocated by the Node.js process.
+
+![Debugging memory with Chrome Dev Tools](./images/chrome-dev-tools-memory.gif)
+
+If all went as expected you should see that the total amount of memory is around 600Mb. Not surprising right? If we load all the content of the file in a buffer, the content of the file is essentially loaded all in memory!
+
+> **🎭 PLAY**  
+> Try to do the same with our streaming alternative to find out how much memory is used!
+>
+> Advice: since the streaming approach is asynchronous is hard to put a meaningful breakpoint. In order to make things easy, you can add the following line at the end of the code:
+>
+> ```javascript
+> srcStream.on('end', () => destStream.end())
+> destStream.on('finish', () => {
+>   console.log('done')
+> })
+> ```
+>
+> Now you can add the breakpoint in the `console.log` line
+
+How much memory did you get? Why not to try even with the 3Gb file now?
+
+At this point you should have clear in mind why Streams are so convenient 🙂
+
+
+## 01.4 Our friend `Buffer`
+
+... TODO
 
 
 
