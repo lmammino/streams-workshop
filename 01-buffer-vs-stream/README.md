@@ -4,6 +4,7 @@
 - [01.2 Streaming intro](#012-streaming-intro)
 - [01.3 Memory comparison](#013-memory-comparison)
 - [01.4 Our friend `Buffer`](#014-our-friend-buffer)
+- [01.5 Our new friend stream](#015-our-new-friend-stream)
 
 
 ## 01.1 buffers intro
@@ -233,7 +234,7 @@ c.length // 4 (yes, an emoji is a multi-byte character!)
 Other useful operations on buffers are `.slice` and `Buffer.concat`. `.slice allows you to get an arbitrary sub section of a buffer`:
 
 ```javascript
-const a = Buffer.from('Hello dear  friends')
+const a = Buffer.from('Hello dear friends')
 a.slice(6,10).toString() // 'dear'
 ```
 
@@ -251,7 +252,11 @@ all.toString() // 'Hello, World'
 > Try all the commands above in a Node.js shell
 
 
+## 01.5 Our new friend stream
 
+...
+
+---
 
 | [⬅️ 00 - Intro](/README.md) | [🏠](/README.md)| [02 - Readable Streams ➡️](/02-readable-streams)|
 |:--------------|:------:|------------------------------------------------:|
