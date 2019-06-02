@@ -37,9 +37,9 @@ Enjoy! 🙃
 
 ## Shameless self plug
 
-If you like this work, consider supporting me by getting a copy of [Node.js Design Patterns, Second Edition](https://www.amazon.com/Node-js-Design-Patterns-server-side-applications/dp/1785885588/ref=sr_1_1?crid=30JCXBZFQGH3E&keywords=nodejs+design+patterns&qid=1559508955&s=gateway&sprefix=nodejs+design%2Caps%2C204&sr=8-1), which also goes into great depth about Streams and related design patterns.
+If you like this work, consider supporting me by getting a copy of [Node.js Design Patterns, Second Edition](http://amzn.to/2bB58Ic), which also goes into great depth about Streams and related design patterns.
 
-[![Node.js Design Patterns, Second Edition by Mario Casciaro and Luciano Mammino](./node-js-design-patterns.png)](https://www.amazon.com/Node-js-Design-Patterns-server-side-applications/dp/1785885588/ref=sr_1_1?crid=30JCXBZFQGH3E&keywords=nodejs+design+patterns&qid=1559508955&s=gateway&sprefix=nodejs+design%2Caps%2C204&sr=8-1)
+[![Node.js Design Patterns, Second Edition by Mario Casciaro and Luciano Mammino](./node-js-design-patterns.png)](http://amzn.to/2bB58Ic)
 
 Buy on [Amazon.com](http://amzn.to/2bB58Ic) - [Amazon.co.uk](http://amzn.to/2bddyWq) - [Packtpub](https://www.packtpub.com/web-development/nodejs-design-patterns-second-edition) - [O'Reilly](http://shop.oreilly.com/product/9781785885587.do)
 
