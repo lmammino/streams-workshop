@@ -5,6 +5,7 @@
 - [02.3 Paused mode](#023-paused-mode)
 - [02.4 Mode switch conditions](#024-mode-switch-conditions)
 - [02.5 Readable streams are async iterators](#025-readable-streams-are-async-iterators)
+- [02.6 Summary](#026-summary)
 
 
 ## 02.1 What is a Readable stream
