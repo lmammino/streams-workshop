@@ -5,6 +5,7 @@
 - [01.3 Memory comparison](#013-memory-comparison)
 - [01.4 Our friend `Buffer`](#014-our-friend-buffer)
 - [01.5 Our new friend stream](#015-our-new-friend-stream)
+- [01.6 Summary](#016-summary)
 
 
 ## 01.1 buffers intro
@@ -265,15 +266,28 @@ For now there are only 2 important things to keep in mind about streams instance
 >
 > Write a function that receives a stream and counts the number of bytes in the stream.
 >
-> A skeleton of the file is available at 01-buffer-vs-stream/exercises/countBytes.js
+> A skeleton of the file is available at `01-buffer-vs-stream/exercises/countBytes.js`.
 >
-> You can run a test to validate your implementation with:
+> You can edit the file and run an interactive test session to validate your implementation with:
 >
 > ```bash
 > npm test -- 01-buffer-vs-stream/exercises/countBytes.test.js
 > ```
 
+
+## 01.6 Summary
+
+At this point you should be more familiar with the concepts of buffer and stream and you should start to understand how streams are a convenient paradigm in comparison with loading big buffers straight into memory.
+
+If I had to summarise why streams are better than buffers, here are few points:
+
+- Streams can keep a **low memory footprint** even with large amounts of data
+- Streams allows you to **process data as soon as it is available**
+
+
+That's all for now, take a little break and get ready to move to the [Next section](/02-readable-streams/README.md)
+
 ---
 
-| [⬅️ 00 - Intro](/README.md) | [🏠](/README.md)| [02 - Readable Streams ➡️](/02-readable-streams)|
+| [⬅️ 00 - Intro](/README.md) | [🏠](/README.md)| [02 - Readable Streams ➡️](/02-readable-streams/README.md)|
 |:--------------|:------:|------------------------------------------------:|
