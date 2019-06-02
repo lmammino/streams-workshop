@@ -273,6 +273,8 @@ For now there are only 2 important things to keep in mind about streams instance
 > ```bash
 > npm test -- 01-buffer-vs-stream/exercises/countBytes.test.js
 > ```
+>
+> If you really struggle with this, you can have a look at [`01-buffer-vs-stream/exercises/countBytes.solution.js`](/01-buffer-vs-stream/exercises/countBytes.solution.js) for a possible solution.
 
 
 ## 01.6 Summary
