@@ -254,7 +254,24 @@ all.toString() // 'Hello, World'
 
 ## 01.5 Our new friend stream
 
-...
+Streams are the topic of this workshop, so we will definitely go into great depth!
+
+For now there are only 2 important things to keep in mind about streams instances:
+
+- Every stream is an event emitter (we already saw the `data` and the `end` events)
+- In the `streamInstance.on('data', (chunk) => {})` event, `chunk` is a buffer instance that contains the current portion of the data being read from the source
+
+> **🏹 Exercise** (01-buffer-vs-stream/exercises/countBytes.js)
+>
+> Write a function that receives a stream and counts the number of bytes in the stream.
+>
+> A skeleton of the file is available at 01-buffer-vs-stream/exercises/countBytes.js
+>
+> You can run a test to validate your implementation with:
+>
+> ```bash
+> npm test -- 01-buffer-vs-stream/exercises/countBytes.test.js
+> ```
 
 ---
 

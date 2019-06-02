@@ -16,6 +16,8 @@ Before getting started, make sure you have the following prerequisites in your s
 
 ## Getting started
 
+Clone the repository and run `npm install` to get all the necessary dependencies.
+
 The workshop is divided in chapters and the first chapter starts at [`01-buffer-vs-stream`](01-buffer-vs-stream/README.md).
 
 Every chapter will teach you a specific stream concept and offer you some examples and exercises to familiarize with that concept.
