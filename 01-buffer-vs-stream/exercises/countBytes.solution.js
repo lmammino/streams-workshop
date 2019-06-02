@@ -2,7 +2,8 @@
 
 const countBytes = (srcStream, cb) => {
   let bytes = 0
-  srcStream.on('end', () => cb(bytes))
+  srcStream.on('error', (err) => cb(err))
+  srcStream.on('end', () => cb(null, bytes))
   srcStream.on('data', (chunk) => {
     bytes += chunk.length
   })
