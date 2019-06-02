@@ -3,6 +3,7 @@
 - [02.1 What is a Readable stream](#021-what-is-a-readable-stream)
 - [02.2 Flowing mode](#022-flowing-mode)
 - [02.3 Paused mode](#023-paused-mode)
+- [02.4 Readable streams are async iterators](#024-readable-streams-are-async iterators)
 
 
 ## 02.1 What is a Readable stream
@@ -62,9 +63,48 @@ file.on('error', err => console.error(`Error reading file: ${err}`))
 
 ## 02.3 Paused mode
 
+When using paused mode on a Readable stream, a consumer has to call the `read` method explicitly to read chunks of data from the stream. The stream emits a `readable` event to signal that new data is available and that `read()` should be called to read the data.
+
+![Readable streams in paused mode](./images/paused-mode.gif)
+
+With this approach the data is not automatically pushed to the consumer, but only a signal that the data is available is sent. It is up to the consumer to call `read()` to get the data currently stored in the stream internal buffer. If there's no more data in the internal buffer a call to `read()` will return `null`. Also in this mode, once all the data has been read, `end` is emitted.
+
+Let's see how to rewrite the previous example in paused mode:
+
+```javascript
+// count-emoji-paused.js
+
+const { createReadStream } = require('fs')
+const { EMOJI_MAP } = require('emoji') // from npm
+
+const emojis = Object.keys(EMOJI_MAP)
+
+const file = createReadStream(process.argv[2])
+let counter = 0
+
+file.on('readable', () => {
+  let chunk
+  while ((chunk = file.read()) !== null) {
+    for (let char of chunk.toString('utf8')) {
+      if (emojis.includes(char)) {
+        counter++
+      }
+    }
+  }
+})
+
+file.on('end', () => console.log(`Found ${counter} emojis`))
+
+file.on('error', err => console.error(`Error reading file: ${err}`))
+```
+
+> **🎭 PLAY**  
+> Play with this script a bit and try to run it against some of the emoji art files available in the [`assets`](/assets) folder. You should see the same results as before!
+
+
+## 02.4 Readable streams are async iterators
+
 ...
-
-
 
 ---
 
