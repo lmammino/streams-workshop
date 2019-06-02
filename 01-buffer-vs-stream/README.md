@@ -18,6 +18,7 @@ const {
   writeFileSync
 } = require('fs')
 
+// `src` is the first argument from cli, `dest` the second
 const [,, src, dest] = process.argv
 
 // read entire file content
@@ -170,7 +171,84 @@ At this point you should have clear in mind why Streams are so convenient 🙂
 
 ## 01.4 Our friend `Buffer`
 
-... TODO
+The `Buffer` object is such a fundamental concept in Node.js and it's heavily used also with streams. So it's definitely worth spending some extra minutes to get more familiar with it.
+
+In its essence a Buffer is a data structure that allows us to manage raw binary data.
+
+The most common way to create a buffer from scratch is by using the `.from` method:
+
+```javascript
+const a = Buffer.from('Hello') // data from a utf8 string
+const b = Buffer.from('48656c6c6f', 'hex') // data from an hex string
+const c = Buffer.from('SGVsbG8=', 'base64') // data from a base64 encoded binary sequence
+const d = Buffer.from([0x48, 0x65, 0x6c, 0x6c, 0x6f]) // data from an array of integers (bytes)
+```
+
+If you console log one of these instances you will get something like this:
+
+```plain
+<Buffer 48 65 6c 6c 6f>
+```
+
+Or if you do something like:
+
+```javascript
+const b = Buffer.from('48656c6c6f', 'hex')
+console.log(b.toJSON())
+```
+
+You will see something like this:
+
+```json
+{
+  "type": "Buffer",
+  "data": [ 72, 101, 108, 108, 111 ]
+}
+```
+
+Which is the proof that, internally, a buffer is represented as an array of bytes.
+
+Another common way to create a buffer instance is `Buffer.alloc(n)` that allows you to create an empty buffer (all zeros) of `n` bytes.
+
+If you want to inspect the content of a Buffer instance you can do that with the `.toString(encoding)` method, which accepts different types of encoding such as `'base64'`, `'hex'` or `'utf8'` (default value).
+
+```javascript
+const a = Buffer.from('Hello')
+a.toString() // 'Hello'
+a.toString('hex') // '48656c6c6f'
+a.toString('base64') // 'SGVsbG8='
+```
+
+To get the size of a buffer (in bytes) you can use the property `.length`:
+
+```javascript
+const a = Buffer.from('Hello')
+const b = Buffer.from('Hello👻')
+const c = Buffer.from('👻')
+a.length // 5
+b.length // 9
+c.length // 4 (yes, an emoji is a multi-byte character!)
+```
+
+Other useful operations on buffers are `.slice` and `Buffer.concat`. `.slice allows you to get an arbitrary sub section of a buffer`:
+
+```javascript
+const a = Buffer.from('Hello dear  friends')
+a.slice(6,10).toString() // 'dear'
+```
+
+`Buffer.concat([...buffers])` allows you to concatenate the content of 2 or more buffers:
+
+```javascript
+const a1 = Buffer.from('Hello')
+const a2 = Buffer.from(', ')
+const a3 = Buffer.from('World')
+const all = Buffer.concat([a1, a2, a3])
+all.toString() // 'Hello, World'
+```
+
+> **🎭 PLAY**  
+> Try all the commands above in a Node.js shell
 
 
 

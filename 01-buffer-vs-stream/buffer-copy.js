@@ -5,6 +5,7 @@ const {
   writeFileSync
 } = require('fs')
 
+// `src` is the first argument from cli, `dest` the second
 const [,, src, dest] = process.argv
 
 // read entire file content
