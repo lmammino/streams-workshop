@@ -285,7 +285,9 @@ If I had to summarise why streams are better than buffers, here are few points:
 - Streams allows you to **process data as soon as it is available**
 
 
-That's all for now, take a little break and get ready to move to the [Next section](/02-readable-streams/README.md)
+That's all for now, congratulations on finishing the first chapter! 🎉
+
+Take a little break and get ready to move to the [Next section](/02-readable-streams/README.md).
 
 ---
 
