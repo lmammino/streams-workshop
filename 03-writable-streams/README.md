@@ -2,6 +2,8 @@
 
 - [03.1 What is a Writable stream](#031-what-is-a-writable-stream)
 - [03.2 Using Writable streams](#032-using-writable-streams)
+- [03.3 Backpressure](#033-backpressure)
+- [03.4 Summary](#034-summary)
 
 
 ## 03.1 What is a Writable stream
@@ -84,6 +86,76 @@ last write & close the stream
 > ```
 >
 > What are you seeing as a request body on the request bin page? :)
+
+
+## 03.3 Backpressure
+
+A Writable stream is an abstraction that allows you to write data over a destination, we should know that by now.
+
+Imagine you are using a filesystem Writable stream to write data onto a disk. Every single time you call `.write(data)` on the stream instance, `data` is copied into a buffer in memory and the stream implementation will try to flush that information into disk as soon as possible.
+
+If you are writing data very fast, the disk won't probably be able to keep up and the actual buffered data will grow. If this keeps happening you will easily fill all the memory and end up with the same problem we saw in the first chapter, where we reach the maximum size of a buffer. At that point, our application will crash with an exception!
+
+To give you a better example on a case where this might happen, let's go back to our copy file example we saw in chapter 1.
+
+If we copy a large file from a very fast disk like an SSD drive to a much slower one like a magnetic spinning disk or a network drive, it's very likely we will be able to read very fast and try to write at the same speed. The writable stream will keep accumulating data to the point where it will crash!
+
+This problem is called **backpressure** as it reminds fluid dynamics where you have to be careful on how much pressure you exert to push a fluid down a pipe, to make sure it goes at the desired speed.
+
+Remember when we said that the streaming implementation of our file copy script was not perfect. Well this is why, it was not taking backpressure into account!
+
+Thankfully, Node.js Writable stream APIs can help us to handle backpressure properly.
+
+In fact, every single time we call `.write(data)` on a stream, the stream will return a `boolean` value. If this value is `true` it means that it is safe to continue, if the value is `false` it means that the destination is lagging behind and the stream is accumulating too much data to write. In this last case, when you receive `false`, you should slow down, or even better stop writing until all the buffered data is written down.
+
+But how do we know when it's ok to write again? A writable stream will emit a `drain` event once all the buffered data has been flushed and it's safe to write again. So with this in mind, handling backpressure properly looks more or less like this:
+
+```javascript
+function backpressureAwareCopy(srcStream, destStream) {
+  srcStream.on('data', (chunk) => {
+    const canContinue = destStream.write
+    if (!canContinue) {
+      // if we are overflowing the destination, we stop reading
+      srcStream.pause()
+      // once all the buffered data is flushed, we resume reading from source
+      destStream.once('drain', () => srcStream.resume())
+    }
+  })
+}
+```
+
+Notice that we are using `.once` instead of `.on`, because we want to listen only once for the `drain` event. Every single time we are handling backpressure the listener for `drain` is re-created and automatically removed after the event is handled.
+
+With this in mind we can rewrite our stream copy script to handle backpressure:
+
+```javascript
+// stream-copy-safe.js
+
+const { createReadStream, createWriteStream } = require('fs')
+
+const [, , src, dest] = process.argv
+const srcStream = createReadStream(src)
+const destStream = createWriteStream(dest)
+
+srcStream.on('data', data => {
+  const canContinue = destStream.write(data)
+  if (!canContinue) {
+    // we are overflowing the destination, we should pause
+    srcStream.pause()
+    // we will resume when the destination stream is drained
+    destStream.once('drain', () => srcStream.resume())
+  }
+})
+```
+
+This implementation is much better than the previous one! 👍
+
+
+## 03.4 Summary
+
+At this point you should be familiar with the basic concepts related to Writable streams: what are the most common usages of Writable streams, how to write data, how to close the stream and how to handle back pressure.
+
+Take a deep breath and get ready to move into one of my favourite stream topics: [Transform streams](/04-transform-streams/README.md)! ✌️
 
 ---
 
