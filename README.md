@@ -8,7 +8,7 @@ A workshop on Node.js Streams
 Before getting started, make sure you have the following prerequisites in your system:
 
 - Node.js 12.3+
-- NPM 6.9.0
+- NPM 6.9.0+
 - A recent version of Google Chrome
 - a text editor of your choice
 - a bash-compatible shell
