@@ -50,17 +50,32 @@ We can attach event listeners like `finish` (when the request is fully sent), `c
 
 In order to write content to the server through the request object we can invoke `write(data)` and `end(data)`.
 
-These two methods from writable streams allows to write data over the destination. The data can be a string or a `Buffer` instance.
+These two methods from writable streams allows to write data over the destination. The data can be a `string` or a `Buffer`.
 
-When using `end(data)`, the connection with the destination will be closed after the write is completed, so it is generally used to write the last chunk of data. You can also call `end()` without any data if you want to just close the stream without writing more data.
+When using `end(data)`, the connection with the destination will be closed after the write is completed, so it is generally used to write the last chunk of data. You can also call `end()` without any `data` argument if you want to just close the stream without writing more data.
 
-...
+If you run the previous snippet of code, you should see the following output on the client:
 
-TODO add output from client and server from previous example
+```plain
+Request sent
+Server responded with "200"
+Connection closed
+```
 
-TODO add play section to change the http request
+This is instead what the server will receive:
 
-TODO maybe - see if pipedream.net supports images and explain how to send an image from a buffer built through a base64 representation of the data
+![HTTP request on the server](./images/http-request-on-the-server.png)
+
+You can see that the payload of the received request contains:
+
+```plain
+writing some content...
+last write & close the stream
+```
+
+> **🎭 PLAY**  
+> Get a new server sandbox URL on [requestbin.com/](https://requestbin.com/), update the code with the new endpoint and try to run some requests. Inspect the output on the client side and on the server side.
+
 
 ---
 
