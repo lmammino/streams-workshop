@@ -188,19 +188,19 @@ Many web frameworks like **Express** or **Fastify** build on top of these featur
 
 But now you are aware! So, I would encourage you to look more under the hood of your favorite web framework and find out how to stream requests and responses with it.
 
-> **🏹 Exercise** ([simple-web-server.js](/03-writable-streams/exercises/simple-web-server.js))
+> **🏹 Exercise** ([http-uppercase.js](/03-writable-streams/exercises/http-uppercase.js))
 >
 > Write a "uppercasify" web server. A server that takes the incoming text in the body of the request and responds with the same text but "uppercasified". Don't forget to handle backpressure!
 >
-> A skeleton of the solution is available at `03-writable-streams/exercises/simple-web-server.js`.
+> A skeleton of the solution is available at `03-writable-streams/exercises/http-uppercase.js`.
 >
 > You can edit the file and run an interactive test session to validate your implementation with:
 >
 > ```bash
-> npm test -- 03-writable-streams/exercises/simple-web-server.test.js
+> npm test -- 03-writable-streams/exercises/http-uppercase.test.js
 > ```
 >
-> If you really struggle with this, you can have a look at [`simple-web-server.solution.js`](/03-writable-streams/exercises/simple-web-server.solution.js) for a possible solution.
+> If you really struggle with this, you can have a look at [`http-uppercase.solution.js`](/03-writable-streams/exercises/http-uppercase.solution.js) for a possible solution.
 
 
 ## 03.5 Summary
