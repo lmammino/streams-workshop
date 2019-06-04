@@ -4,7 +4,7 @@
   "description": "A workshop on Node.js Streams",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch"
+    "test": "jest --watchAll"
   },
   "repository": {
     "type": "git",
