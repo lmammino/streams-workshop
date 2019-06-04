@@ -170,19 +170,19 @@ main()
 > **🎭 PLAY**  
 > Play with this script a bit and try to run it against some of the emoji art files available in the [`assets`](/assets) folder. Again, you should see the same results as before!
 
-> **🏹 Exercise** ([countWords.js](/02-readable-streams/exercises/countWords.js))
+> **🏹 Exercise** ([count-words.js](/02-readable-streams/exercises/count-words.js))
 >
 > Write a function that receives a text stream and counts the total number of words in the stream.
 >
-> A skeleton of the file is available at `02-readable-streams/exercises/countWords.js`.
+> A skeleton of the file is available at `02-readable-streams/exercises/count-words.js`.
 >
 > You can edit the file and run an interactive test session to validate your implementation with:
 >
 > ```bash
-> npm test -- 02-readable-streams/exercises/countWords.test.js
+> npm test -- 02-readable-streams/exercises/count-words.test.js
 > ```
 >
-> If you really struggle with this, you can have a look at [`countWords.solution.js`](/02-readable-streams/exercises/countWords.solution.js) for a possible solution.
+> If you really struggle with this, you can have a look at [`count-words.solution.js`](/02-readable-streams/exercises/count-words.solution.js) for a possible solution.
 
 
 ## 02.6 Summary

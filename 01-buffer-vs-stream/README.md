@@ -262,19 +262,19 @@ For now there are only 2 important things to keep in mind about streams instance
 - Every stream is an event emitter (we already saw the `data` and the `end` events)
 - In the `streamInstance.on('data', (chunk) => {})` event, `chunk` is a buffer instance that contains the current portion of the data being read from the source
 
-> **🏹 Exercise** ([countBytes.js](/01-buffer-vs-stream/exercises/countBytes.js))
+> **🏹 Exercise** ([count-bytes.js](/01-buffer-vs-stream/exercises/count-bytes.js))
 >
 > Write a function that receives a stream and counts the number of bytes in the stream.
 >
-> A skeleton of the file is available at `01-buffer-vs-stream/exercises/countBytes.js`.
+> A skeleton of the file is available at `01-buffer-vs-stream/exercises/count-bytes.js`.
 >
 > You can edit the file and run an interactive test session to validate your implementation with:
 >
 > ```bash
-> npm test -- 01-buffer-vs-stream/exercises/countBytes.test.js
+> npm test -- 01-buffer-vs-stream/exercises/count-bytes.test.js
 > ```
 >
-> If you really struggle with this, you can have a look at [`countBytes.solution.js`](/01-buffer-vs-stream/exercises/countBytes.solution.js) for a possible solution.
+> If you really struggle with this, you can have a look at [`count-bytes.solution.js`](/01-buffer-vs-stream/exercises/count-bytes.solution.js) for a possible solution.
 
 
 ## 01.6 Summary

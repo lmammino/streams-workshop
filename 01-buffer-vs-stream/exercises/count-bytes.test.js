@@ -3,7 +3,7 @@
 const { join } = require('path')
 const { createReadStream } = require('fs')
 const { createGunzip } = require('zlib')
-const countBytes = require('./countBytes')
+const countBytes = require('./count-bytes')
 
 test('It should count the right number of bytes', done => {
   const filePath = join(__dirname, '..', '..', 'assets', 'moby-dick.txt.gz')

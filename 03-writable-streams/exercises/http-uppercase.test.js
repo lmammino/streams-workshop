@@ -1,7 +1,7 @@
 'use strict'
 
 var MockReq = require('mock-req')
-const server = require('./http-uppercase.solution.js')
+const server = require('./http-uppercase')
 
 test('it should respond with uppercasified body', (done) => {
   const req = new MockReq({

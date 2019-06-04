@@ -3,7 +3,8 @@
 - [03.1 What is a Writable stream](#031-what-is-a-writable-stream)
 - [03.2 Using Writable streams](#032-using-writable-streams)
 - [03.3 Backpressure](#033-backpressure)
-- [03.4 Summary](#034-summary)
+- [03.4 More on HTTP streaming](#034-more-on-http-streaming)
+- [03.5 Summary](#035-summary)
 
 
 ## 03.1 What is a Writable stream
@@ -151,7 +152,58 @@ srcStream.on('data', data => {
 This implementation is much better than the previous one! 👍
 
 
-## 03.4 Summary
+## 03.4 More on HTTP streaming
+
+We already mentioned that the Node.js `http` module offers a very good support for streaming but we only saw that in action from the perspective of a client trying to make a request so far.
+
+Let's provide a little bit more context to understand more how to build a server and how a *request* and a *response* look like in this scenario.
+
+The most simple way to create a web server in Node.js is something like this:
+
+```javascript
+// simple-web-server.js
+
+const http = require('http')
+
+const server = http.createServer((req, res) => {
+  res.end('Hello world!')
+})
+
+server.listen(8000)
+```
+
+Here we have 2 streams:
+
+ - `req` is a Readable stream which represents the incoming request
+ - `res` is a Writable stream which represents the response to provide to the client
+
+You can use `req.on('data', (chunk) => { /* ... */ })` to read the payload for the incoming request. Imagine you are receiving an upload for a big file, this streaming API will give you the opportunity to deal with it efficiently.
+
+You can use `res.write(data)` and `res.end(data)` to send data back to the client.
+
+> **🎭 PLAY**
+> Try to execute this script and send some requests to the web server.
+
+Many web frameworks like **Express** or **Fastify** build on top of these features and offer more convenient and sophisticated APIs to deal with routing and the request/response lifecycle. With those abstractions in place you might not realize that you are dealing with streams and you might not take full advantage of the streaming capabilities!
+
+But now you are aware! So, I would encourage you to look more under the hood of your favorite web framework and find out how to stream requests and responses with it.
+
+> **🏹 Exercise** ([simple-web-server.js](/03-writable-streams/exercises/simple-web-server.js))
+>
+> Write a "uppercasify" web server. A server that takes the incoming text in the body of the request and responds with the same text but "uppercasified". Don't forget to handle backpressure!
+>
+> A skeleton of the solution is available at `03-writable-streams/exercises/simple-web-server.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm test -- 03-writable-streams/exercises/simple-web-server.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`simple-web-server.solution.js`](/03-writable-streams/exercises/simple-web-server.solution.js) for a possible solution.
+
+
+## 03.5 Summary
 
 At this point you should be familiar with the basic concepts related to Writable streams: what are the most common usages of Writable streams, how to write data, how to close the stream and how to handle back pressure.
 
