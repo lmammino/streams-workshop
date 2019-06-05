@@ -94,6 +94,10 @@ The [`crypto`](https://nodejs.org/api/crypto.html) built-in module offers some i
  - [`crypto.createHash`](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options): creates a Transform stream that calculates the hash of the content that is flowing through the stream.
  - [`crypto.createHmac`](https://nodejs.org/api/crypto.html#crypto_crypto_createhmac_algorithm_key_options): creates a Transform stream that creates a signature for the data flowing through the stream.
 
+Here are some quick examples on how you can use these functions:
+
+TODO add examples.
+
 
 ---
 
