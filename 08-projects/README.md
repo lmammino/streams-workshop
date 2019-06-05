@@ -6,8 +6,8 @@ In this last section you will find some ideas of small projects you can build to
  - [08.2 - ✏️ Project: Emoji moon phases animation over HTTP](#082---️-project-emoji-moon-phases-animation-over-http)
  - [08.3 - ✏️ Project: Static files web server with built-in compression](#083---️-project-static-files-web-server-with-built-in-compression)
  - [08.4 - ✏️ Project: Streaming data processing](#084---️-project-streaming-data-processing)
- - [08.5 ✏️ Project: Files archive](#085-️-project-files-archive)
- - [08.6 ✏️ Project: Encrypted file share over TCP](#086-️-project-encrypted-file-share-over-tcp)
+ - [08.5 - ✏️ Project: Files archive](#085----project-files-archive)
+ - [08.6 - ✏️ Project: Encrypted file share over TCP](#086---️-project-encrypted-file-share-over-tcp)
  - [08.7 Where to go from here](#087-where-to-go-from-here)
 
 
@@ -61,7 +61,7 @@ You can [download the data in csv format](https://www.kaggle.com/jboysen/london-
 Bonus points if you start the processing directly on the zipped file to save disk space :)
 
 
-## 08.5 ✏️ Project: Files archive
+## 08.5 - ✏️ Project: Files archive
 
 Did you ever wonder how [**tar** archive file format](https://en.wikipedia.org/wiki/Tar_(computing)) works?
 
@@ -70,7 +70,7 @@ Essentially it allows you to combine multiple files into one. Without looking at
 Can you also build the CLI utility to unpack all the files from the archive?
 
 
-## 08.6 ✏️ Project: Encrypted file share over TCP
+## 08.6 - ✏️ Project: Encrypted file share over TCP
 
 Build a client and a server to transfer files over TCP. Extra point if you add a layer of encryption. Once you have your implementation ready, give the client code to a friend or a colleague and give them your IP address, then ask them to send you a file!
 
