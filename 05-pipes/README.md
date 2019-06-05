@@ -58,11 +58,11 @@ I don't even have to explain what's the goal here, because the code should be re
 
 Now that we know the power of `.pipe()` let's explore some very common Transform stream so that we can put this new power to use.
 
-Let's start by introducing the built-in module `zlib`, which gives you some nice functionality for data compression. These are the most important streaming functions from the module in my opinion:
+Let's start by introducing the built-in module [`zlib`](https://nodejs.org/api/zlib.html), which gives you some nice functionality for data compression. These are the most important streaming functions from the module in my opinion:
 
- - `zlib.createGzip` / `zlib.createGunzip`: creates Transform streams to compress and decompress data using the Gzip algorithm.
- - `zlib.createDeflate` / `zlib.createInflate`: creates Transform streams to compress and decompress data using the Deflate algorithm.
- - `zlib.createBrotliCompress` / `zlib.createBrotliDecompress`: creates Transform streams to compress and decompress data using the Brotli algorithm.
+ - [`zlib.createGzip`](https://nodejs.org/api/zlib.html#zlib_zlib_creategzip_options) / [`zlib.createGunzip`](https://nodejs.org/api/zlib.html#zlib_zlib_creategunzip_options): creates Transform streams to compress and decompress data using the Gzip algorithm.
+ - [`zlib.createDeflate`](https://nodejs.org/api/zlib.html#zlib_zlib_createdeflate_options) / [`zlib.createInflate`](https://nodejs.org/api/zlib.html#zlib_zlib_createinflate_options): creates Transform streams to compress and decompress data using the Deflate algorithm.
+ - [`zlib.createBrotliCompress`](https://nodejs.org/api/zlib.html#zlib_zlib_createbrotlicompress_options) / [`zlib.createBrotliDecompress`](https://nodejs.org/api/zlib.html#zlib_zlib_createbrotlidecompress_options): creates Transform streams to compress and decompress data using the Brotli algorithm.
 
 Let's now try to use this module to implement the `stream-copy-gzip`, but this time also adopting `.pipe`:
 
@@ -85,7 +85,15 @@ srcStream
   .pipe(destStream)
 ```
 
-...
+> **🎭 PLAY**  
+> Play with this script for a bit and maybe try to use other compression algorithms from the `zlib` module.
+
+The [`crypto`](https://nodejs.org/api/crypto.html) built-in module offers some interesting utilities to perform crypto operations using Transform streams:
+
+ - [`crypto.createCipheriv`](https://nodejs.org/api/crypto.html#crypto_crypto_createcipheriv_algorithm_key_iv_options) / [`crypto.createDecipheriv`](https://nodejs.org/api/crypto.html#crypto_crypto_createdecipheriv_algorithm_key_iv_options): create encryption and decryption streams.
+ - [`crypto.createHash`](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options): creates a Transform stream that calculates the hash of the content that is flowing through the stream.
+ - [`crypto.createHmac`](https://nodejs.org/api/crypto.html#crypto_crypto_createhmac_algorithm_key_options): creates a Transform stream that creates a signature for the data flowing through the stream.
+
 
 ---
 
