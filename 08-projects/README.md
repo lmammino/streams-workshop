@@ -2,7 +2,12 @@
 
 In this last section you will find some ideas of small projects you can build to practice your Node.js streams skills.
 
- - [08.1 - ✏️ Project: Data compression efficiency](#a)
+ - [08.1 - ✏️ Project: Data compression efficiency](#081---️-project-data-compression-efficiency)
+ - [08.2 - ✏️ Project: Emoji moon phases animation over HTTP](#082---️-project-emoji-moon-phases-animation-over-http)
+ - [08.3 - ✏️ Project: Static files web server with built-in compression](#083---️-project-static-files-web-server-with-built-in-compression)
+ - [08.4 - ✏️ Project: Streaming data processing](#084---️-project-streaming-data-processing)
+ - [08.5 ✏️ Project: Files archive](#085-️-project-files-archive)
+ - [08.6 ✏️ Project: Encrypted file share over TCP](#086-️-project-encrypted-file-share-over-tcp)
  - [08.7 Where to go from here](#087-where-to-go-from-here)
 
 
