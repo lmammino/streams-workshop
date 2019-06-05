@@ -2,6 +2,10 @@
 
 - [05.1 Piping things together](#051-piping-things-together)
 - [05.2 Streaming compression and encryption](#052-streaming-compression-and-encryption)
+- [05.3 Error handling and pipeline](#053-error-handling-and-pipeline)
+- [05.4 pumpify](#054-pumpify)
+- [05.5 Stream finished](#055-stream-finished)
+- [05.6 Summary](056-summary)
 
 
 ## 05.1 Piping things together
@@ -97,6 +101,29 @@ The [`crypto`](https://nodejs.org/api/crypto.html) built-in module offers some i
 Here are some quick examples on how you can use these functions:
 
 TODO add examples.
+
+
+## 05.3 Error handling and pipeline
+
+
+...
+
+
+## 05.4 pumpify
+
+
+...
+
+
+## 05.5 Stream finished
+
+
+...
+
+
+## 05.6 Summary
+
+...
 
 
 ---
