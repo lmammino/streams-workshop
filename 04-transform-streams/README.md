@@ -116,11 +116,11 @@ Yep! This is definitely a lot of code, don't worry to much about trying to under
 
 Let's move on!
 
-Ok, what's the point here?
+Ok, but what's the point here?
 
 Well, I hope you get a rough idea on how Transform streams work internally and how the data flows when you use them in combination with Readable and Writable streams.
 
-I promise you will never have to write all this complicate and error-prone code. In fact, in the next chapter we will see how to reduce all this complexity to exactly 1 line of code by using `.pipe()`!
+I promise you will never have to write all this complicate and error-prone code. In fact, in the next chapter we will see how to reduce all this complexity to exactly 1 line of code by using `.pipe()`. Hold tight!
 
 
 ## 04.3 Summary
