@@ -56,6 +56,35 @@ I don't even have to explain what's the goal here, because the code should be re
 
 ## 05.2 Streaming compression and encryption
 
+Now that we know the power of `.pipe()` let's explore some very common Transform stream so that we can put this new power to use.
+
+Let's start by introducing the built-in module `zlib`, which gives you some nice functionality for data compression. These are the most important streaming functions from the module in my opinion:
+
+ - `zlib.createGzip` / `zlib.createGunzip`: creates Transform streams to compress and decompress data using the Gzip algorithm.
+ - `zlib.createDeflate` / `zlib.createInflate`: creates Transform streams to compress and decompress data using the Deflate algorithm.
+ - `zlib.createBrotliCompress` / `zlib.createBrotliDecompress`: creates Transform streams to compress and decompress data using the Brotli algorithm.
+
+Let's now try to use this module to implement the `stream-copy-gzip`, but this time also adopting `.pipe`:
+
+```javascript
+// stream-copy-gzip-pipe.js
+
+const {
+  createReadStream,
+  createWriteStream
+} = require('fs')
+const { createGzip } = require('zlib')
+
+const [, , src, dest] = process.argv
+const srcStream = createReadStream(src)
+const gzipStream = createGzip()
+const destStream = createWriteStream(dest)
+
+srcStream
+  .pipe(gzipStream)
+  .pipe(destStream)
+```
+
 ...
 
 ---
