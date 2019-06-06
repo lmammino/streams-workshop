@@ -1,12 +1,16 @@
-# 07 - Stream Patterns
+# 07 - Streams in the browser
 
 ...
 
-Stream join
+Show idea of project
 
-Stream fork
+How to bundle with webpack
 
-Stream multiplexing / de-multiplexing
+Create HTML
+
+Run it
+
+Play with creating a Delay stream to make the items appear every second
 
 
 

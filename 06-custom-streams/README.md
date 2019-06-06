@@ -4,8 +4,7 @@
 - [06.2 Custom Readable streams](#062-custom-readable-streams)
 - [06.3 Custom Transform streams](#063-custom-transform-streams)
 - [06.4 Custom Writable streams](#064-custom-writable-streams)
-- [06.5 Streams in the browser](#065-streams-in-the-browser)
-- [06.6 Conclusion](#066-conclusion)
+- [06.5 Conclusion](#065-conclusion)
 
 
 ## 06.1 The `readable-stream` module
@@ -160,21 +159,135 @@ We will see later how to use this stream in combination with a Transform stream.
 
 ## 06.3 Custom Transform streams
 
-...
+Creating custom Transform streams is unsurprisingly similar to creating custom Readable streams. Also in this case it's just a matter of extending the `Transform` class. This time though, we have to implement the `_tranform` method which accepts 3 arguments:
+
+ - `chunk`: the current chunk of data to transform
+ - `enc`: a string that represents the current encoding of the data
+ - `cb`: a callback to invoke when the transformation is done. This allows you to have asynchronous transformations.
+
+Custom Transform streams can be very useful in a variety of situations, and they are probably the most common types of custom streams you will be writing in real life.
+
+Just to give you some ideas of possible cases where it could make sense to implement custom Transform streams, here's a list:
+
+ - Convert the data from one format to another, for instance make a text uppercase;
+ - Filter the incoming data and ignore chunks that are not relevant, for instance ignore all the negative numbers, push all the others;
+ - Stringify objects in an object stream so that they can be piped to a file or the standard output.
+
+Let's actually see how to implement the uppercasify stream:
+
+```javascript
+// uppercasify.js
+
+const { Transform } = require('readable-stream')
+
+class Uppercasify extends Transform {
+  _transform (chunk, encoding, done) {
+    this.push(chunk.toString().toUpperCase())
+    done()
+  }
+}
+
+module.exports = Uppercasify
+```
+
+That was easy! 😎
+
+Sometimes though, Transform streams might get a little bit more complicated as you might have to accumulate some data across chunks, before you have enough information to be able to transform the data. This is common with tasks like encryption or compression where the size of the incoming data doesn't necessarily match the size of the outgoing data, so you might need to buffer some data for a while before being able to emit a fully transformed chunk.
+
+This problem might also present itself in (apparently) simpler cases. For instance, let's imagine we want to write a Transform stream that gets arbitrary text in, but pushes individual words out. This kind of stream will essentially allow us to consume pieces of texts word by word. This is a great primitive if you want to create a program that can extract the most common words out of a text.
+
+Why is this tricky? Because chunks are emitted once an arbitrary amount of bytes is reached, there's no semantic about individual words, so you might end up with a truncated word at the end of any given chunk. How do you solve this?
+
+One way to address this challenge might be to take all the words in the current chunk and push them out, except the last one (as this might be truncated). We have to retain the last word and wait for the next chunk. Once the next chunk arrives we can prepand the remainder word from the previous chunk to the new one.
+
+This approach makes sense and it should work, but there's still a problem. Once the source stream is over, you might still have data buffered from the last chunk. How do we emit that?
+
+Thankfully, the `Transform` class gives us a way to deal with these cases, the `_flush()` method. This method is called every time the source stream is finished and before the Transform stream gets closed as well. So it's the perfect place to flush remanining data.
+
+With these new ideas in mind let's see a possible implementation for the `WordsStream`:
+
+```javascript
+// words-stream.js
+
+const { Transform } = require('readable-stream')
+
+class WordsStream extends Transform {
+  constructor (options) {
+    super(options)
+    this.lastWord = ''
+  }
+
+  _transform (chunk, enc, cb) {
+    // prepends the last word to the new data
+    const newData = this.lastWord + chunk.toString()
+    const words = newData.split(/[\s,.;:]+/)
+
+    // removes the last word in the chunk
+    this.lastWord = words.pop()
+
+    // emit every single word remaining in the array
+    for (let word of words) {
+      this.push(word)
+    }
+
+    cb()
+  }
+
+  _flush (cb) {
+    if (this.lastWord) {
+      this.push(this.lastWord)
+    }
+
+    cb()
+  }
+}
+
+module.exports = WordsStream
+```
+
+We can play with this stream with the following script:
+
+```javascript
+// use-words-stream.js
+
+const WordsStream = require('./words-stream')
+
+const wordsStream = new WordsStream()
+
+process.stdin
+  .pipe(wordsStream)
+  .pipe(process.stdout)
+```
+
+If we run this script as follows:
+
+```bash
+node use-words-stream < README.md
+```
+
+You will see that the output will look more or less like this:
+
+> #06-CustomStreams-\[061The`readable-stream`module\](#061-the-readable-stream-module)-\[062CustomReadablestreams\](#062-custom-readable-streams)-\[063CustomTransformstreams\](#063-custom-transform-streams)-\[064CustomWritablestreams\](#064-custom-writable-streams)-\[065Streamsinthebrowser\](#065-streams-in-the-browser)-\[066Conclusion\](#066-conclusion)##061The`readable-stream`moduleAveryusefulmodulefromNPMwhenitcomestowritecustomstreamsis\[`readable-stream`\](http//npmim/readable-stream)ThismodulecontainsacopyofthelatestversionofNodejsstreamlibrarythiswayyoucanalwaysusethelateststreamfeaturesregardlessofwhatversionofNodejsisrunningyourcodeThisalsohelpsmakingstreambehaviorsalittlebitmorestableandpredictableastherehavebeenseveralchangesinthelibraryovertheyearsThenameisactuallyabitmisleadingasthemodulecontainsallthecodefromthenative`stream`modulenotjustthepartrelatedtoReadablestreamsAnotherinterestingpropertyofthismoduleisthatitmakesNodejsstreamscompatiblewiththebrowserwhichmeansthatyoucanusemodulebundlerssuchasWebpackandBroswserifytoobtainJavaScriptcodeusingstreamsthatcanruninthebrowserSofromnowonwearegoingtoreplaceallthe...
+
+Essentially, just pushing all the chunks blindly to the standard output concatenates all of them together!
+
+Ideally we would need another Transform stream piped before the standard output that can add a separator, for instance a new line, to the current chunk.
+
+TODO add exercise about separator stream
+
+TODO add exercise about jsonify stream
+
 
 ## 06.4 Custom Writable streams
 
 ...
 
-## 06.5 Streams in the browser
 
-...
-
-## 06.6 Conclusion
+## 06.5 Conclusion
 
 ...
 
 ---
 
-| [⬅️ 05 - Pipes](/05-pipes/README.md) | [🏠](/README.md)| [07 - Streams patterns ➡️](/07-stream-patterns/README.md)|
+| [⬅️ 05 - Pipes](/05-pipes/README.md) | [🏠](/README.md)| [07 - Streams in the browser ➡️](/07-streams-in-the-browser/README.md)|
 |:--------------|:------:|------------------------------------------------:|

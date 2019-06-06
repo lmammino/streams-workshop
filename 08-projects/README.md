@@ -93,5 +93,5 @@ Thank you! 👋
 
 ---
 
-| [⬅️ 07 - Stream patterns](/07-stream-patterns/README.md) | [🏠](/README.md)| - |
+| [⬅️ 07 - Streams in the browser](/07-streams-in-the-browser/README.md) | [🏠](/README.md)| - |
 |:--------------|:------:|------------------------------------------------:|
