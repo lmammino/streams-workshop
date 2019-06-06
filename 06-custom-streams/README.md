@@ -2,7 +2,17 @@
 
 ...
 
+Readable-stream package
 
+Create a custom Readable
+
+Create a custom Transform
+
+Create a custom Writable
+
+Streams in the browser
+
+...
 
 ---
 

@@ -7,11 +7,14 @@ const {
 
 const {
   randomBytes,
+  createHash,
   createCipheriv
 } = require('crypto')
 
-// secret must be 128bit (you could calculate the md5 of a arbitrary string to make that fit)
-const [, , src, dest, cipherKey] = process.argv
+const [, , src, dest, secret] = process.argv
+
+// secret must be 128bit, so, in order to be able to use arbitrary strings, we calculate the md5 of the string and use the result as secret.
+const cipherKey = createHash('md5').update(secret).digest('hex')
 
 // a random initialization bytes vector (needed for decryption)
 const initVect = randomBytes(16)

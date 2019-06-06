@@ -3,7 +3,7 @@
 - [05.1 Piping things together](#051-piping-things-together)
 - [05.2 Streaming compression and encryption](#052-streaming-compression-and-encryption)
 - [05.3 Error handling and pipeline](#053-error-handling-and-pipeline)
-- [05.4 pumpify](#054-pumpify)
+- [05.4 Composability and `pumpify`](#054-composability-and-pumpify)
 - [05.5 Stream finished](#055-stream-finished)
 - [05.6 Summary](056-summary)
 
@@ -98,21 +98,201 @@ The [`crypto`](https://nodejs.org/api/crypto.html) built-in module offers some i
  - [`crypto.createHash`](https://nodejs.org/api/crypto.html#crypto_crypto_createhash_algorithm_options): creates a Transform stream that calculates the hash of the content that is flowing through the stream.
  - [`crypto.createHmac`](https://nodejs.org/api/crypto.html#crypto_crypto_createhmac_algorithm_key_options): creates a Transform stream that creates a signature for the data flowing through the stream.
 
-Here are some quick examples on how you can use these functions:
+Here follows some quick examples on how you can use these functions.
 
-TODO add examples.
+Encrypt a file:
+
+```javascript
+// stream-copy-encrypt.js
+
+const {
+  createReadStream,
+  createWriteStream
+} = require('fs')
+
+const {
+  randomBytes,
+  createHash,
+  createCipheriv
+} = require('crypto')
+
+const [, , src, dest, secret] = process.argv
+
+// secret must be 128bit, so, in order to be able to use arbitrary strings, we calculate the md5 of the string and use the result as secret.
+const cipherKey = createHash('md5').update(secret).digest('hex')
+
+// a random initialization bytes vector (needed for decryption)
+const initVect = randomBytes(16)
+
+const srcStream = createReadStream(src)
+const encryptStream = createCipheriv('aes256', cipherKey, initVect)
+const destStream = createWriteStream(dest)
+
+srcStream
+  .pipe(encryptStream)
+  .pipe(destStream)
+  .on('finish', () => {
+    console.log(`File encrypted (init vect: ${initVect.toString('hex')})`)
+  })
+```
+
+Create the SHA hash of a file:
+
+```javascript
+// create-hash.js
+
+const { createHash } = require('crypto')
+const { createReadStream, createWriteStream } = require('fs')
+
+const [,, filename] = process.argv
+
+const hashStream = createHash('sha256')
+const input = createReadStream(filename)
+const output = createWriteStream(filename + '.sha')
+
+input
+  .pipe(hashStream)
+  .pipe(output)
+```
+
+Create the HMAC (signature) of a file with a given secret:
+
+```javascript
+// create-hmac.js
+
+const { createHmac } = require('crypto')
+const { createReadStream, createWriteStream } = require('fs')
+
+const [,, filename, secret] = process.argv
+
+const hmacStream = createHmac('sha256', secret)
+const input = createReadStream(filename)
+const output = createWriteStream(filename + '.hmac')
+
+input
+  .pipe(hmacStream)
+  .pipe(output)
+```
+
+> **🎭 PLAY**  
+> Try to execute these example and understand better how they work.
 
 
 ## 05.3 Error handling and pipeline
 
+`.pipe` is amazing, but it's not perfect. In fact, there's a very important and dangerous shortcoming with it: error handling!
 
-...
+To understand what I mean here, let's get back to our example of a multi-step pipeline:
+
+```javascript
+readableFileStream
+  .pipe(decompressStream)
+  .pipe(decryptStream)
+  .pipe(convertStream)
+  .pipe(encryptStream)
+  .pipe(compressStream)
+  .pipe(writableFileStream)
+```
+
+We said that every time we call `.pipe`, it will return a new instance of a stream. This means that if we want to handle errors in every step (AS WE SHOULD!), we have to do something like this:
+
+```javascript
+
+readableFileStream
+  .pipe(decompressStream)
+  .on('error', handleErr)
+  .pipe(decryptStream)
+  .on('error', handleErr)
+  .pipe(convertStream)
+  .on('error', handleErr)
+  .pipe(encryptStream)
+  .on('error', handleErr)
+  .pipe(compressStream)
+  .on('error', handleErr)
+  .pipe(writableFileStream)
+  .on('error', handleErr)
+
+function handleError (err) {
+  // ... print the error and destroy all the streams to avoid resources and memory leaking
+  console.error(err)
+  readableFileStream.destroy()
+  decompressStream.destroy()
+  decryptStream.destroy()
+  convertStream.destroy()
+  encryptStream.destroy()
+  compressStream.destroy()
+  writableFileStream.destroy()
+}
+```
+
+This is extremely verbose and annoying, right? Thankfully Node.js gives us a utility that allows us to simplify this code.
+
+The utility is called [`stream.pipeline`](https://nodejs.org/api/stream.html#stream_stream_pipeline_streams_callback) and it's a function with the following signature:
+
+```javascript
+stream.pipeline(...streams, callback)
+```
+
+We can pass an arbitrary number of streams followed by a callback function. The streams get piped in order and the callback is called when all the processing is done or in case there's an error. If there's an error all the streams are properly ended and destroyed form you. So with this utility we could rewrite our previous example as follows:
+
+```javascript
+const { pipeline } = require('stream')
+
+pipeline(
+  readableFileStream,
+  decompressStream,
+  decryptStream,
+  convertStream,
+  encryptStream,
+  compressStream,
+  writableFileStream,
+  (err) => {
+    if (err) {
+      console.error(err)
+    } else {
+      console.log('Processing completed successfully')
+    }
+  }
+)
+```
+
+> **🎭 PLAY**  
+> Try to rewrite one of the examples above using `stream.pipeline`, rather than `.pipe`
+
+**Note**: `stream.pipeline` is available only from Node.js 10, so if you are using an earlier version of Node.js or if you are not sure in which environment your code is going to run, you can use the NPM module [`pump`](http://npm.im/pump), which does exactly what pump does.
 
 
-## 05.4 pumpify
+## 05.4 Composability and `pumpify`
 
+At this point you should have realized that Node.js streams have the property of being very *composable*. In fact, you can generally see the source Readable stream as the *input*, the chain of Transform streams as *business logic* and the Writable stream as an *output*. With this mindset, you will end up focusing on your Transform streams most of the time and swap different implementations of input and output if needed.
 
-...
+For instance, you might work on a plain script and use files as input and output. Later, you might want to turn a simple script into a more sophisticated CLI utility and at that point it might make more sense to consume data from standard input (`process.stdin`) and emit the data in the standard output (`process.stdout`). Eventually, you might even want to build a web server that exposes the same business logic, so your input will become the HTTP request and your output the HTTP response.
+
+In all these cases, you don't have to change your Transform streams, but just use different instances of the source Readable stream and the destination Writable stream.
+
+But what if our business logic is made of several Transform streams chained together and we want to expose those as a separate module independent from the Readable source and the Writable destination?
+
+In those cases you can use the module [`pumpify`](http://npm.im/pumpify) from NPM, which you can use as follows:
+
+```javascript
+const pumpify = require('pumpify')
+
+// ... create all the stream instances here
+
+const myTransformPipeline = pumpify(
+  decompressStream,
+  decryptStream,
+  convertStream,
+  encryptStream,
+  compressStream
+)
+
+module.exports = myTransformPipeline
+```
+
+The great thing about `pumpify` is that, if one of the streams closes or errors, all the streams in the pipeline will be destroyed.
+
+TODO add exercise
 
 
 ## 05.5 Stream finished
