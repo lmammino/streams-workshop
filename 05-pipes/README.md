@@ -4,8 +4,7 @@
 - [05.2 Streaming compression and encryption](#052-streaming-compression-and-encryption)
 - [05.3 Error handling and pipeline](#053-error-handling-and-pipeline)
 - [05.4 Composability and `pumpify`](#054-composability-and-pumpify)
-- [05.5 Stream finished](#055-stream-finished)
-- [05.6 Summary](056-summary)
+- [05.5 Summary](055-summary)
 
 
 ## 05.1 Piping things together
@@ -290,20 +289,39 @@ const myTransformPipeline = pumpify(
 module.exports = myTransformPipeline
 ```
 
-The great thing about `pumpify` is that, if one of the streams closes or errors, all the streams in the pipeline will be destroyed.
+The great thing about `pumpify` is that, if one of the streams closes or generates an error,
+all the streams in the pipeline will be destroyed.
 
-TODO add exercise
+> **🏹 Exercise** ([encgz.js](/05-pipes/exercises/encgz.js))
+>
+> Use `pumpify` to create two functions that generate Transform streams.
+>
+> - The first function generates a Transform stream that encrypts the
+> incoming data using the "aes256" algorithm and then compresses the resulting
+> data using gzip.
+> - The second function generates a Transform stream that decompress the
+> incoming data using gunzip, and then decrypts the data using the "aes256"
+> algorithm
+>
+> A skeleton of the file is available at `05-pipes/exercises/encgz.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm test -- 05-pipes/exercises/encgz.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`encgz.solution.js`](/05-pipes/exercises/encgz.solution.js) for a possible solution.
 
 
-## 05.5 Stream finished
+## 05.5 Summary
 
+This is probably one of the most important sections about Node.js streams. Once
+you understand how to combine streams and create pipelines, you now have a new
+great power at your disposal for efficient data processing.
 
-...
-
-
-## 05.6 Summary
-
-...
+In the next chapter we will expand our set of skill by learning how to [create custom streams](/06-custom-streams/README.md).
+Are you ready for it? 😛
 
 
 ---
