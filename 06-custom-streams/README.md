@@ -267,13 +267,15 @@ node use-words-stream < README.md
 
 You will see that the output will look more or less like this:
 
-> #06-CustomStreams-\[061The`readable-stream`module\](#061-the-readable-stream-module)-\[062CustomReadablestreams\](#062-custom-readable-streams)-\[063CustomTransformstreams\](#063-custom-transform-streams)-\[064CustomWritablestreams\](#064-custom-writable-streams)-\[065Streamsinthebrowser\](#065-streams-in-the-browser)-\[066Conclusion\](#066-conclusion)##061The`readable-stream`moduleAveryusefulmodulefromNPMwhenitcomestowritecustomstreamsis\[`readable-stream`\](http//npmim/readable-stream)ThismodulecontainsacopyofthelatestversionofNodejsstreamlibrarythiswayyoucanalwaysusethelateststreamfeaturesregardlessofwhatversionofNodejsisrunningyourcodeThisalsohelpsmakingstreambehaviorsalittlebitmorestableandpredictableastherehavebeenseveralchangesinthelibraryovertheyearsThenameisactuallyabitmisleadingasthemodulecontainsallthecodefromthenative`stream`modulenotjustthepartrelatedtoReadablestreamsAnotherinterestingpropertyofthismoduleisthatitmakesNodejsstreamscompatiblewiththebrowserwhichmeansthatyoucanusemodulebundlerssuchasWebpackandBroswserifytoobtainJavaScriptcodeusingstreamsthatcanruninthebrowserSofromnowonwearegoingtoreplaceallthe...
+> #06-CustomStreams-\[061The\`readable-stream\`module\](#061-the-readable-stream-module)-\[062CustomReadablestreams\](#062-custom-readable-streams)-\[063CustomTransformstreams\](#063-custom-transform-streams)-\[064CustomWritablestreams\](#064-custom-writable-streams)-\[065Streamsinthebrowser\](#065-streams-in-the-browser)-\[066Conclusion\](#066-conclusion)##061The\`readable-stream\`moduleAveryusefulmodulefromNPMwhenitcomestowritecustomstreamsis\[\`readable-stream\`\](http//npmim/readable-stream)ThismodulecontainsacopyofthelatestversionofNodejsstreamlibrarythiswayyoucanalwaysusethelateststreamfeaturesregardlessofwhatversionofNodejsisrunningyourcodeThisalsohelpsmakingstreambehaviorsalittlebitmorestableandpredictableastherehavebeenseveralchangesinthelibraryovertheyearsThenameisactuallyabitmisleadingasthemodulecontainsallthecodefromthenative\`stream\`modulenotjustthepartrelatedtoReadablestreamsAnotherinterestingpropertyofthismoduleisthatitmakesNodejsstreamscompatiblewiththebrowserwhichmeansthatyoucanusemodulebundlerssuchasWebpackandBroswserifytoobtainJavaScriptcodeusingstreamsthatcanruninthebrowserSofromnowonwearegoingtoreplaceallthe...
 
 Essentially, just pushing all the chunks blindly to the standard output concatenates all of them together!
 
 Ideally we would need another Transform stream piped before the standard output that can add a separator, for instance a new line, to the current chunk.
 
 TODO add exercise about separator stream
+
+TODO add short version of Transform stream with new Transform
 
 TODO add exercise about jsonify stream
 
