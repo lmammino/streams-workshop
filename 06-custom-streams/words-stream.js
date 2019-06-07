@@ -11,7 +11,7 @@ class WordsStream extends Transform {
   _transform (chunk, enc, cb) {
     // prepends the last word to the new data
     const newData = this.lastWord + chunk.toString()
-    const words = newData.split(/[\s,.;:]+/)
+    const words = newData.split(/[^a-zA-Z]+/)
 
     // removes the last word in the chunk
     this.lastWord = words.pop()
