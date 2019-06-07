@@ -273,7 +273,22 @@ Essentially, just pushing all the chunks blindly to the standard output concaten
 
 Ideally we would need another Transform stream piped before the standard output that can add a separator, for instance a new line, to the current chunk.
 
-TODO add exercise about separator stream
+> **🏹 Exercise** ([separator-stream.js](/06-custom-streams/exercises/separator-stream.js))
+>
+> Implement a Transform stream that takes the current chunk and add to it a separator before pushing it through the pipeline. This stream can be useful to make chunks more visible when piping the output of a pipeline to the standard output. Make the separator sequence configurable as first parameter of your stream constructor.
+>
+> A skeleton of the solution is available at `03-writable-streams/exercises/separator-stream.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm test -- 06-custom-streams/exercises/separator-stream.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`separator-stream.solution.js`](/06-custom-streams/exercises/separator-stream.solution.js) for a possible solution.
+
+> **🎭 PLAY**  
+> Try to use the solution from the previous exercise in combination with our `WordsStream` to get a nicer output in the standard output.
 
 TODO add short version of Transform stream with new Transform
 
