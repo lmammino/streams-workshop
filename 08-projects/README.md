@@ -15,6 +15,18 @@ In this last section you will find some ideas of small projects you can build to
 
 Write a CLI script that takes some data from a file or from the standard input and compresses it into files using different algorithms from the ones available in the `zlib` package and then tells you which one is the more efficient and what's the compression ratio.
 
+Here you could use an interesting trick that is sometime called *stream forking*. Basically, given the input stream, you can pipe it to the different compression streams you plan to use, which is going to look more or less like this:
+
+```javascript
+sourceStream.pipe(compressionStream1)
+sourceStream.pipe(compressionStream2)
+sourceStream.pipe(compressionStream3)
+```
+
+This way you don't have to *clone* the data from the source stream as many times as many compresison algorithms.
+
+Behind the scenes, what's happening here is that the 3 compression streams will be listening for the same `data` events on the `sourceStream`.
+
 
 ## 08.2 - ✏️ Project: Emoji moon phases animation over HTTP
 
