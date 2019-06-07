@@ -28,8 +28,6 @@ You will often find 2 different types of interactive actions:
 - **🏹 Exercise**: when you have to use some of the concepts you just learned to solve a programming problem. Generally every exercise will have a test that you can run to validate your solution.
 
 
-Some slides will be available to complement the workshop material.
-
 Enjoy! 🙃
 
 [➡️ GET STARTED](01-buffer-vs-stream/README.md).
