@@ -14,7 +14,7 @@ If we combine these 3 pieces we could build an browser application that displays
 
 The idea is to build something like this:
 
-![Flow of showing emojis in the browser](./images/stream-in-the-browser-flow.gif)
+![Flow of data to display emojis in the browser](.images/streams-in-the-browser-flow.gif)
 
 
 ## 07.2 Bundling with Webpack
