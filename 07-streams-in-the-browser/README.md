@@ -111,6 +111,8 @@ The only relevant details here are:
 
 At this point you can open the HTML file with any modern browser and you should see our list of emojis! Hooray! 🎉
 
+![List of emojis in the browser](./images/streams-in-the-browser-screenshot.png)
+
 > **🎭 PLAY**  
 > Did you notice that the stream is so fast to dump all the emojis that we don't even notice that JavaScript is streaming them?
 >
