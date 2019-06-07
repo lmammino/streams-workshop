@@ -24,7 +24,9 @@
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.1.1",
     "eslint-plugin-standard": "^4.0.0",
-    "jest": "^24.8.0"
+    "jest": "^24.8.0",
+    "webpack": "^4.33.0",
+    "webpack-cli": "^3.3.3"
   },
   "dependencies": {
     "emoji": "^0.3.2",
