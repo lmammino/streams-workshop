@@ -146,7 +146,7 @@ We will see later how to use this stream in combination with a Transform stream.
 > Implement a Readable stream that allows you to consume all numbers in the
 > fibonacci sequence that are smaller than a given max number.
 >
-> A skeleton of the solution is available at `03-writable-streams/exercises/fib-stream.js`.
+> A skeleton of the solution is available at `06-custom-streams/exercises/fib-stream.js`.
 >
 > You can edit the file and run an interactive test session to validate your implementation with:
 >
@@ -171,7 +171,8 @@ Just to give you some ideas of possible cases where it could make sense to imple
 
  - Convert the data from one format to another, for instance make a text uppercase;
  - Filter the incoming data and ignore chunks that are not relevant, for instance ignore all the negative numbers, push all the others;
- - Stringify objects in an object stream so that they can be piped to a file or the standard output.
+ - Stringify objects in an object stream so that they can be piped to a file or the standard output;
+ - Batch multiple chunks together to avoid multiple writes over expensive backends.
 
 Let's actually see how to implement the uppercasify stream:
 
@@ -277,7 +278,7 @@ Ideally we would need another Transform stream piped before the standard output 
 >
 > Implement a Transform stream that takes the current chunk and add to it a separator before pushing it through the pipeline. This stream can be useful to make chunks more visible when piping the output of a pipeline to the standard output. Make the separator sequence configurable as first parameter of your stream constructor.
 >
-> A skeleton of the solution is available at `03-writable-streams/exercises/separator-stream.js`.
+> A skeleton of the solution is available at `06-custom-streams/exercises/separator-stream.js`.
 >
 > You can edit the file and run an interactive test session to validate your implementation with:
 >
@@ -320,12 +321,72 @@ In short, to create a new Transform stream without having to extend the `Transfo
 
 ## 06.4 Custom Writable streams
 
-...
+Let's see now how to create a custom Writable stream. I am sure it will come with no surprise that, in order to accomplish this, we just have to extend the `Writable` class and implement the `_write` method. `_write` takes in the same parameters as `_transform`, but in this case it doesn't make much sense to call `this.push` within that method, writable are the last step of the pipeline.
+
+So what if we want to create a Writable stream that appends elements to the browser DOM? It might look more or less like this:
+
+```javascript
+// dom-append.js
+
+const { Writable } = require('readable-stream')
+
+class DOMAppend extends Writable {
+  _write (chunk, encoding, done) {
+    const elem = document.createElement('li')
+    const content = document.createTextNode(chunk.toString())
+    elem.appendChild(content)
+    document.getElementById('list').appendChild(elem)
+    done()
+  }
+}
+
+module.exports = DOMAppend
+```
+
+One interesting thing here is that the backpressure signal is automatically handled for you by the `write` method from the base `Writable` class. In reality the `write` method is the public interface, users will never have to call `_write` directly. `_write` is called internally by `write`, which wrappes it with some useful extra logic, like the one needed to report backpressure.
+
+Of course Writable streams can be created using the shorthand syntax as well. Let's see here how to create a Writable stream that essentially allows us to accumulate all the streaming data in a string. Just to warn you, this is not a great pattern as it defeats the purpose of streaming data, but it's ok in some cases like testing or when you are sure the amount of data produced through the stream is very small:
+
+```javascript
+// write-to-stream.js
+
+const { Writable } = require('readable-stream')
+
+let content = ''
+const stringWritable = new Writable({
+  write (chunk, enc, done) {
+    content += chunk.toString()
+    done()
+  }
+})
+stringWritable.on('finish', () => console.log(content))
+
+stringWritable.write('Ada')
+stringWritable.end('Lovelace')
+```
+
+Guess what's going to be the output of this example! 😉
+
+> **🏹 Exercise** ([write-to-array.js](/06-custom-streams/exercises/write-to-array.js))
+>
+> Implement a Writable stream that accumulates the written data into an array.
+> Every time that a write on the stream is performed, the given chunk is stored
+> as a string as a new element in the array (last element).
+>
+> A skeleton of the solution is available at `06-custom-streams/exercises/write-to-array.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm test -- 06-custom-streams/exercises/write-to-array.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`write-to-array.solution.js`](/06-custom-streams/exercises/write-to-array.solution.js) for a possible solution.
 
 
 ## 06.5 Conclusion
 
-...
+This is everything for what concerns customs streams for now. Are you ready to move to the last section and talk about [streams in the browser](/07-streams-in-the-browser/README.md)?
 
 ---
 
