@@ -290,9 +290,32 @@ Ideally we would need another Transform stream piped before the standard output 
 > **🎭 PLAY**  
 > Try to use the solution from the previous exercise in combination with our `WordsStream` to get a nicer output in the standard output.
 
-TODO add short version of Transform stream with new Transform
+We saw that you can create custom instances of Readable streams by just calling `new Readable`. You can do the same with Transform streams. For instance this is how you can build a Transform stream that applies `JSON.stringify` to the chunks in flight and use it in combination with an instance of the class `DateStream` that we built previously:
 
-TODO add exercise about jsonify stream
+```javascript
+// infinite-date-stream
+
+const { Transform } = require('readable-stream')
+const DateStream = require('./date-stream')
+
+const dateStream = new DateStream()
+const jsonify = new Transform({
+  objectMode: true,
+  transform (chunk, enc, done) {
+    this.push(JSON.stringify(chunk) + '\n')
+    done()
+  }
+})
+
+dateStream
+  .pipe(jsonify)
+  .pipe(process.stdout)
+```
+
+In short, to create a new Transform stream without having to extend the `Transform` class, we have to pass to the `Transform` constructor a `transform` function that follows exactly the same signature as the `_transform` from the class extension alternative.
+
+> **🎭 PLAY**  
+> Try to use the script above and maybe change the transformation logic a bit. It doesn't have to be a JSON to be able to push to standard output. As long as the transformation is producing strings or buffers, standard output will accept it. What if we want to format the dates in a more human readable way?
 
 
 ## 06.4 Custom Writable streams
