@@ -22,6 +22,8 @@ If you prefer to keep your environment clean and use Docker, you should be able 
 docker-compose run workspace
 ```
 
+If you use Docker, `npm install` is automatically run for you every time you launch the container.
+
 
 ## Getting started
 
