@@ -50,7 +50,7 @@ If you like this piece of work, consider supporting me by getting a copy of [Nod
 
 Buy on [Amazon.com](http://amzn.to/2bB58Ic) - [Amazon.co.uk](http://amzn.to/2bddyWq) - [Packtpub](https://www.packtpub.com/web-development/nodejs-design-patterns-second-edition) - [O'Reilly](http://shop.oreilly.com/product/9781785885587.do)
 
-If you already have this book, please consider leaving a review on Amazon, Packt, GoodReads or in any other review channel that you generally use.
+If you already have this book, **please consider writing a review** on Amazon, Packt, GoodReads or in any other review channel that you generally use.
 
 
 ## Contributing
