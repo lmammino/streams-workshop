@@ -11,7 +11,16 @@ Before getting started, make sure you have the following prerequisites in your s
 - NPM 6.9.0+
 - A recent version of Google Chrome
 - a text editor of your choice
-- a bash-compatible shell
+- a bash-compatible shell (if you use Windows you can [install bash](https://www.windowscentral.com/how-install-bash-shell-command-line-windows-10) or use Docker, as described below)
+
+
+## Using Docker
+
+If you prefer to keep your environment clean and use Docker, you should be able to spin un a workable environment with Docker Compose by running:
+
+```bash
+docker-compose run workspace
+```
 
 
 ## Getting started
