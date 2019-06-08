@@ -11,18 +11,7 @@ Before getting started, make sure you have the following prerequisites in your s
 - NPM 6.9.0+
 - A recent version of Google Chrome
 - a text editor of your choice
-- a bash-compatible shell (if you use Windows you can [install bash](https://www.windowscentral.com/how-install-bash-shell-command-line-windows-10) or use Docker, as described below)
-
-
-## Using Docker
-
-If you prefer to keep your environment clean and use Docker, you should be able to spin un a workable environment with Docker Compose by running:
-
-```bash
-docker-compose run workspace
-```
-
-If you use Docker, `npm install` is automatically run for you every time you launch the container.
+- a bash-compatible shell (if you use Windows you can [install bash](https://www.windowscentral.com/how-install-bash-shell-command-line-windows-10) or use Docker, as [described below](#using-docker))
 
 
 ## Getting started
@@ -42,6 +31,17 @@ You will often find 2 different types of interactive actions:
 Enjoy! 🙃
 
 [➡️ GET STARTED](01-buffer-vs-stream/README.md).
+
+
+## Using Docker
+
+If you prefer to keep your environment clean and use Docker, you should be able to spin un a workable environment with Docker Compose by running:
+
+```bash
+docker-compose run workspace
+```
+
+If you use Docker, `npm install` is automatically run for you every time you launch the container.
 
 
 ## Shameless self plug 😇
