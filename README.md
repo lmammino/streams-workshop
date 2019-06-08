@@ -1,6 +1,6 @@
 # streams-workshop
 
-A workshop on Node.js Streams
+A workshop on Node.js Streams by Luciano Mammino ([@loige](https://twitter.com/loige)). 🤓
 
 
 ## Prerequisites
@@ -42,20 +42,22 @@ Enjoy! 🙃
 [➡️ GET STARTED](01-buffer-vs-stream/README.md).
 
 
-## Shameless self plug
+## Shameless self plug 😇
 
-If you like this work, consider supporting me by getting a copy of [Node.js Design Patterns, Second Edition](http://amzn.to/2bB58Ic), which also goes into great depth about Streams and related design patterns.
+If you like this piece of work, consider supporting me by getting a copy of [Node.js Design Patterns, Second Edition](http://amzn.to/2bB58Ic), which also goes into great depth about Streams and related design patterns.
 
 [![Node.js Design Patterns, Second Edition by Mario Casciaro and Luciano Mammino](./node-js-design-patterns.png)](http://amzn.to/2bB58Ic)
 
 Buy on [Amazon.com](http://amzn.to/2bB58Ic) - [Amazon.co.uk](http://amzn.to/2bddyWq) - [Packtpub](https://www.packtpub.com/web-development/nodejs-design-patterns-second-edition) - [O'Reilly](http://shop.oreilly.com/product/9781785885587.do)
 
+If you already have this book, please consider leaving a review on Amazon, Packt, GoodReads or in any other review channel that you generally use.
+
 
 ## Contributing
 
-Everyone is very welcome to contribute to this project.
+In the spirit of Open Source, everyone is very welcome to contribute to this project.
 You can contribute just by submitting bugs or suggesting improvements by
-[opening an issue on GitHub](https://github.com/lmammino/streams-workshop/issues).
+[opening an issue on GitHub](https://github.com/lmammino/streams-workshop/issues) or by [submitting a PR](https://github.com/lmammino/streams-workshop/pulls).
 
 
 ## License
