@@ -238,7 +238,7 @@ b.length // 9
 c.length // 4 (yes, an emoji is a multi-byte character!)
 ```
 
-Other useful operations on buffers are `.slice` and `Buffer.concat`. `.slice` allows you to get an arbitrary sub section of a buffer:
+Other useful operations on buffers are `.slice` and `Buffer.concat`. `.slice` allows you to get an arbitrary sub-section of a buffer:
 
 ```javascript
 const a = Buffer.from('Hello dear friends')
