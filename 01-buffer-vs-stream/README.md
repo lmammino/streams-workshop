@@ -58,11 +58,11 @@ ERR_FS_FILE_TOO_LARGE: File size is greater than possible Buffer
 
 Why is this happening?
 
-Essentially because when we use `fs.readFileSync` we load all the binary content from the file in memory into a `Buffer` object. Buffers are limited in size as they live in memory.
+Essentially because when we use `fs.readFileSync` we load all the binary content from the file in memory using a `Buffer` object. Buffers are, by design, limited in size as they live in memory.
 
 Let's try to explain this better with an analogy...
 
-Imagine instead of copying bytes of data you have to help Mario moving blocks from one place to another:
+Imagine that, instead of copying bytes of data, you are using Mario to move blocks from one place to another:
 
 ![Mario trying to move some blocks](./images/buffer-analogy-001.jpg)
 
@@ -70,11 +70,11 @@ Mario can lift some blocks:
 
 ![Mario can lift some blocks](./images/buffer-analogy-002.jpg)
 
-But, if you have to move many blocks, he can't definitely move all of them in one go:
+But, if he has to move many blocks, he can't definitely move all of them in one go:
 
 ![Mario can't move many blocks in one go](./images/buffer-analogy-003.jpg)
 
-So what can we do? What if we want to find an approach that works independently from the number of blocks we have to move?
+So what can he do? What if he wants to find an approach that works independently from the number of blocks he has to move?
 
 ![Mario can move the blocks one by one, he can stream them!](./images/buffer-analogy-004.jpg)
 
@@ -83,7 +83,7 @@ Mario can move the blocks one by one, he can stream them!
 
 ## 01.2 Streaming intro
 
-How can we convert our implementation into a streaming one?
+How can we convert our copy file implementation into a streaming one?
 
 It's very easy actually:
 
@@ -113,7 +113,7 @@ Essentially we are replacing `readFileSync` with `createReadStream` and `writeFi
 
 `createReadStream` and `createWriteStream` are then used to create two stream instances `srcStream` and `destStream`. These objects are respectively instances of a `ReadableStream` (input) and a `WritableStream` (output) and we will talk more in detail about these in the next chapters. For now, the only important detail to understand is that streams are not *eager*, they don't read all the data in one go. The data is read in *chunks*, small portions of data. You can immediately use a chunk as soon as it is available through the `data` event. In our case, when a new chunk of data is available in the source stream we immediately write it to the destination stream. This way we never have to keep all the file content in memory.
 
-This implementation here is not perfect, there are some rough edge cases that we will discover later while discussing Writable streams in mode detail, but for now this is good enough to understand the basic principles of stream processing in Node.js!
+This implementation here is not perfect, there are some rough edge cases that we will discover later while discussing Writable streams in more detail, but for now this is good enough to understand the basic principles of stream processing in Node.js!
 
 > **🎭 PLAY**  
 > Try to copy our `big-file.txt` using this new streaming implementation!
@@ -129,10 +129,12 @@ First of all let's create a 600Mb file called `assets/60mb.txt`:
 head -c $((600*1024*1024)) /dev/urandom > assets/600mb.bin
 ```
 
-Now let's run the buffer copy in debug mode from the directory `01-buffer-vs-stream`:
+This might take few minutes... be patient, please.
+
+Now let's run the buffer copy in debug mode:
 
 ```bash
-node --inspect-brk buffer-copy.js ../assets/600mb.bin ../assets/600mb.bin_copy
+node --inspect-brk=0.0.0.0:9229 01-buffer-vs-stream/buffer-copy.js assets/600mb.bin assets/600mb.bin_copy
 ```
 
 This script will pause straight away thanks to the `--inspect-brk` flag.
@@ -142,6 +144,8 @@ Open Google Chrome and visit [chrome://inspect/](chrome://inspect/).
 Click on the **inspect** link at the bottom of the page.
 
 This should open a Chrome developer tool window.
+
+> **Note:**, if you are using Docker, this might not work straight away and you might not see the link. If you have any issue, don't worry, just keep reading and move along. There are ways to get this working in docker, but it gets a bit too complicated. So, if you are short of time, it's best to skip trying this, as this is not the core of the workshop.
 
 You can see that our script is currently paused. Add a breakpoint in the last line where we write the content to the destination (so that the script will stop before executing that last line). Now execute the script and see it getting paused in the last line by the breakpoint. At this point, switch to the **Memory** tab and select the option **Heap Snapshoot** and then click the button **Take Snapshot**. This operation allows you to see all the memory currently allocated by the Node.js process.
 
@@ -169,6 +173,8 @@ How much memory did you get?
 > Why not to try the same exercise with the 3Gb file?
 
 At this point you should have clear in mind why Streams are so convenient 🙂
+
+> **Note:**, if you are using Docker, and couldn't manage to get this working, the gist of it is that the buffered approach will consume at least as much memory as the amount of data you are copying, while the streaming approach keeps a constant memory footprint (about 4kb) regardless on how much data you are copying around.
 
 
 ## 01.4 Our friend `Buffer`

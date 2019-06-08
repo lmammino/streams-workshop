@@ -3,6 +3,8 @@ version: '3.7'
 services:
   workspace:
     build: .
-    network_mode: "host"
     volumes:
       - '.:/app'
+    ports:
+      - "3000:3000"
+      - "9229:9229"

@@ -9,7 +9,7 @@
 
 ## 03.1 What is a Writable stream
 
-A Writable stream is an abstraction that allows to write data over a destination. In a way you can see Writable streams as an abstraction for output.
+A Writable stream is an abstraction that allows you to write data over a destination. In a way you can see Writable streams as an abstraction for output.
 
 Some notable instances of Writable streams:
 
