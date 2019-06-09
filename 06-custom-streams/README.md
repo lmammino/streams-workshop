@@ -348,7 +348,7 @@ One interesting thing here is that the backpressure signal is automatically hand
 Of course Writable streams can be created using the shorthand syntax as well. Let's see here how to create a Writable stream that essentially allows us to accumulate all the streaming data in a string. Just to warn you, this is not a great pattern as it defeats the purpose of streaming data, but it's ok in some cases like testing or when you are sure the amount of data produced through the stream is very small:
 
 ```javascript
-// write-to-stream.js
+// write-to-string.js
 
 const { Writable } = require('readable-stream')
 
