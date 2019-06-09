@@ -123,7 +123,7 @@ This implementation here is not perfect, there are some rough edge cases that we
 
 Let's now see how the two implementations (buffer and streaming) compare in terms of memory usage. We can do that by using Google Chrome developer tools.
 
-First of all let's create a 600Mb file called `assets/60mb.txt`:
+First of all let's create a 600Mb file called `assets/600mb.bin`:
 
 ```bash
 head -c $((600*1024*1024)) /dev/urandom > assets/600mb.bin
