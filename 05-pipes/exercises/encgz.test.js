@@ -38,9 +38,9 @@ class Accumulator extends Writable {
   }
 }
 
-test('It encrypts and compress some data properly', done => {
-  const source = new BufferStream(CLEAN_DATA)
-  const transform = createEncgz(SECRET, IV)
+const decrypt = async (encryptedData, secret, iv) => new Promise((resolve, reject) => {
+  const source = new BufferStream(encryptedData)
+  const transform = createDecgz(secret, iv)
   const dest = new Accumulator()
 
   pipeline(
@@ -49,11 +49,33 @@ test('It encrypts and compress some data properly', done => {
     dest,
     (err) => {
       if (err) {
-        throw err
+        return reject(err)
       }
 
       const data = dest.getData()
-      expect(data).toEqual(ENCRYPTED_DATA)
+      return resolve(data)
+    }
+  )
+})
+
+test('It encrypts and compress some data properly', (done) => {
+  const source = new BufferStream(CLEAN_DATA)
+  const transform = createEncgz(SECRET, IV)
+  const dest = new Accumulator()
+
+  pipeline(
+    source,
+    transform,
+    dest,
+    async (err) => {
+      if (err) {
+        throw err
+      }
+
+      const encryptedData = dest.getData()
+      const decryptedData = await decrypt(encryptedData, SECRET, IV)
+
+      expect(decryptedData).toEqual(CLEAN_DATA)
       done()
     }
   )
