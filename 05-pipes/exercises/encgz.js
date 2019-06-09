@@ -17,6 +17,7 @@ function createCipherKey (secret) {
  */
 function createEncgz (secret, iv) {
   const cipherKey = createCipherKey(secret)
+  // Add your code here...
 }
 
 /**
@@ -27,7 +28,7 @@ function createEncgz (secret, iv) {
  */
 function createDecgz (secret, iv) {
   const cipherKey = createCipherKey(secret)
-  // ..
+  // Add your code here...
 }
 
 module.exports = {
