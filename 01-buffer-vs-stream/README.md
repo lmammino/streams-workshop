@@ -116,7 +116,7 @@ Essentially we are replacing `readFileSync` with `createReadStream` and `writeFi
 This implementation here is not perfect, there are some rough edge cases that we will discover later while discussing Writable streams in more detail, but for now this is good enough to understand the basic principles of stream processing in Node.js!
 
 > **🎭 PLAY**  
-> Try to copy our `big-file.txt` using this new streaming implementation!
+> Try to copy our `3Gb.bin` using this new streaming implementation!
 
 
 ## 01.3 Memory comparison
