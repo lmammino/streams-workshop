@@ -77,7 +77,7 @@ last write & close the stream
 ```
 
 > **🎭 PLAY**  
-> Get a new server sandbox URL on [requestbin.com/](https://requestbin.com/), update the code with the new endpoint and try to run some requests. Inspect the output on the client side and on the server side.
+> Get a new server sandbox URL on [requestbin.com](https://requestbin.com/), update the code with the new endpoint and try to run some requests. Inspect the output on the client side and on the server side.
 
 > **🎭 PLAY**
 > Try to write a buffer initialized from the following base64 encoded data:
