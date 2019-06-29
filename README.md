@@ -44,7 +44,7 @@ docker-compose run workspace
 If you use Docker, `npm install` is automatically run for you every time you launch the container.
 
 
-## Shameless self plug 😇
+## Shameless plug 😇
 
 If you like this piece of work, consider supporting me by getting a copy of [Node.js Design Patterns, Second Edition](http://amzn.to/2bB58Ic), which also goes into great depth about Streams and related design patterns.
 
