@@ -2,8 +2,9 @@ import { request } from 'http'
 
 const req = request(
   {
-    hostname: 'enx6b07hdu6cs.x.pipedream.net', // get your URL at requestbin.com
-    method: 'POST'
+    hostname: 'webhook.site',
+    method: 'POST',
+    path: '/af766141-b50e-484c-a8bd-617ea36a6f40' // get your id at webhook.site
   },
   (resp) => {
     console.log(`Server responded with "${resp.statusCode}"`)

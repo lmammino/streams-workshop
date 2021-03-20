@@ -27,12 +27,13 @@ Let's try to use a Writable stream to send an HTTP request to a server. We are n
 ```javascript
 // writable-http-request.js
 
-const http = require('http')
+import { request } from 'http'
 
-const req = http.request(
+const req = request(
   {
-    hostname: 'enx6b07hdu6cs.x.pipedream.net',
-    method: 'POST'
+    hostname: 'webhook.site',
+    method: 'POST',
+    path: '/af766141-b50e-484c-a8bd-617ea36a6f40' // get your id at webhook.site
   },
   (resp) => {
     console.log(`Server responded with "${resp.statusCode}"`)
@@ -77,7 +78,7 @@ last write & close the stream
 ```
 
 > **🎭 PLAY**  
-> Get a new server sandbox URL on [requestbin.com](https://requestbin.com/), update the code with the new endpoint and try to run some requests. Inspect the output on the client side and on the server side.
+> Get a new server sandbox URL on [webhook.site](https://webhook.site/), update the code with the new endpoint and try to run some requests. Inspect the output on the client side and on the server side.
 
 > **🎭 PLAY**
 > Try to write a buffer initialized from the following base64 encoded data:
@@ -105,7 +106,7 @@ This problem is called **backpressure** as it reminds fluid dynamics where you h
 
 Remember when we said that the streaming implementation of our file copy script was not perfect. Well this is why, it was not taking backpressure into account!
 
-Thankfully, Node.js Writable stream APIs can help us to handle backpressure properly.
+Thankfully, Node.js Writable stream APIs provide a mechanism to handle backpressure!
 
 In fact, every single time we call `.write(data)` on a stream, the stream will return a `boolean` value. If this value is `true` it means that it is safe to continue, if the value is `false` it means that the destination is lagging behind and the stream is accumulating too much data to write. In this last case, when you receive `false`, you should slow down, or even better stop writing until all the buffered data is written down.
 
@@ -132,9 +133,10 @@ With this in mind we can rewrite our stream copy script to handle backpressure:
 ```javascript
 // stream-copy-safe.js
 
-const { createReadStream, createWriteStream } = require('fs')
+import { createReadStream, createWriteStream } from 'fs'
 
 const [, , src, dest] = process.argv
+
 const srcStream = createReadStream(src)
 const destStream = createWriteStream(dest)
 
@@ -163,9 +165,9 @@ The most simple way to create a web server in Node.js is something like this:
 ```javascript
 // simple-web-server.js
 
-const http = require('http')
+import { createServer } from 'http'
 
-const server = http.createServer((req, res) => {
+const server = createServer((req, res) => {
   res.end('Hello world!')
 })
 

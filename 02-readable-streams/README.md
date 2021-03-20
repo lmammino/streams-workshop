@@ -38,24 +38,21 @@ In this example, we use flowing mode to consume data from a file and count the n
 ```javascript
 // count-emoji-flowing.js
 
-const { createReadStream } = require('fs')
-const { EMOJI_MAP } = require('emoji') // from npm
+import { createReadStream } from 'fs'
+import emoji from 'emoji' // from npm
 
-const emojis = Object.keys(EMOJI_MAP)
-
-const file = createReadStream(process.argv[2])
+const file = createReadStream(process.argv[2], { encoding: 'utf-8' })
 let counter = 0
 
 file.on('data', chunk => {
-  for (let char of chunk.toString('utf8')) {
-    if (emojis.includes(char)) {
+  for (const char of chunk.toString('utf8')) {
+    if (emoji.EMOJI_MAP[char]) {
       counter++
     }
   }
 })
 
 file.on('end', () => console.log(`Found ${counter} emojis`))
-
 file.on('error', err => console.error(`Error reading file: ${err}`))
 ```
 
@@ -65,7 +62,7 @@ file.on('error', err => console.error(`Error reading file: ${err}`))
 
 ## 02.3 Paused mode
 
-When using paused mode on a Readable stream, a consumer has to call the `read` method explicitly to read chunks of data from the stream. The stream emits a `readable` event to signal that new data is available and that `read()` should be called to read the data.
+When using paused mode on a Readable stream, a consumer does not receive chunks, but instead, it has to call the `read` method explicitly to read chunks of data from the stream. The stream emits a `readable` event to signal that new data is available and that `read()` should be called to read the data.
 
 ![Readable streams in paused mode](./images/paused-mode.gif)
 
@@ -76,19 +73,17 @@ Let's see how to rewrite the previous example in paused mode:
 ```javascript
 // count-emoji-paused.js
 
-const { createReadStream } = require('fs')
-const { EMOJI_MAP } = require('emoji') // from npm
+import { createReadStream } from 'fs'
+import emoji from 'emoji' // from npm
 
-const emojis = Object.keys(EMOJI_MAP)
-
-const file = createReadStream(process.argv[2])
+const file = createReadStream(process.argv[2], { encoding: 'utf-8' })
 let counter = 0
 
 file.on('readable', () => {
   let chunk
   while ((chunk = file.read()) !== null) {
-    for (let char of chunk.toString('utf8')) {
-      if (emojis.includes(char)) {
+    for (const char of chunk.toString('utf8')) {
+      if (emoji.EMOJI_MAP[char]) {
         counter++
       }
     }
@@ -96,7 +91,6 @@ file.on('readable', () => {
 })
 
 file.on('end', () => console.log(`Found ${counter} emojis`))
-
 file.on('error', err => console.error(`Error reading file: ${err}`))
 ```
 
@@ -108,7 +102,7 @@ file.on('error', err => console.error(`Error reading file: ${err}`))
 
 These conditions will help you to understand better how Readable streams are initialized and which mode is being used:
 
-- All Readable streams are created in **paused** mode
+- Readable streams are created in **paused** mode
 - Paused streams can be switched to **flowing** mode with:
   - `stream.on('data', () => {})`
   - `stream.resume()`
@@ -117,15 +111,15 @@ These conditions will help you to understand better how Readable streams are ini
   - `stream.pause()`
   - `stream.unpipe()` on all attached streams
 
-Don't worry to much about `.pipe` for now as we will explore that later.
+Don't worry too much about `.pipe` for now as we will explore that later.
 
 Modes are just a convention to consume data, both are substantially equivalent and you might prefer either one or another. My advice is to pick one and stay consistent, but also not to mix the two modes while consuming from a given stream.
 
 If you want another view on **flowing** VS **paused** mode:
 
  - *Push* (flowing) VS *Pull* (paused) mental models
- - Flowing is simpler to use
- - Paused mode gives you more control on how and when data is consumed from the source (might be good when it's expensive to read data from source)
+ - Flowing is slightly simpler to use (less verbose)
+ - Paused mode gives you more control on how and when data is consumed from the source (might be good when it's expensive to read data from a source)
 
 
 ## 02.5 Readable streams are async iterators
@@ -145,17 +139,16 @@ With this in mind we can rewrite our previous example as follows:
 ```javascript
 // count-emoji-async-iterator.js
 
-const { createReadStream } = require('fs')
-const { EMOJI_MAP } = require('emoji') // from npm
+import { createReadStream } from 'fs'
+import emoji from 'emoji' // from npm
 
 async function main () {
-  const emojis = Object.keys(EMOJI_MAP)
-  const file = createReadStream(process.argv[2])
+  const file = createReadStream(process.argv[2], { encoding: 'utf-8' })
   let counter = 0
 
-  for await (let chunk of file) {
-    for (let char of chunk.toString('utf8')) {
-      if (emojis.includes(char)) {
+  for await (const chunk of file) {
+    for (const char of chunk.toString('utf8')) {
+      if (emoji.EMOJI_MAP[char]) {
         counter++
       }
     }
@@ -164,7 +157,10 @@ async function main () {
   console.log(`Found ${counter} emojis`)
 }
 
-main()
+main().catch((err) => {
+  console.error(err)
+  process.exit(1)
+})
 ```
 
 > **🎭 PLAY**  
@@ -179,7 +175,7 @@ main()
 > You can edit the file and run an interactive test session to validate your implementation with:
 >
 > ```bash
-> npm test -- 02-readable-streams/exercises/count-words.test.js
+> npm run ex -- 02-readable-streams/exercises/count-words.test.js
 > ```
 >
 > If you really struggle with this, you can have a look at [`count-words.solution.js`](/02-readable-streams/exercises/count-words.solution.js) for a possible solution.
