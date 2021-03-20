@@ -7,9 +7,8 @@ A workshop on Node.js Streams by Luciano Mammino ([@loige](https://twitter.com/l
 
 Before getting started, make sure you have the following prerequisites in your system:
 
-- Node.js 12.3+
+- Node.js 14.16+
 - NPM 6.9.0+
-- A recent version of Google Chrome
 - a text editor of your choice
 - a bash-compatible shell (if you use Windows you can [install bash](https://www.windowscentral.com/how-install-bash-shell-command-line-windows-10) or use Docker, as [described below](#using-docker))
 
@@ -25,10 +24,12 @@ Every chapter will teach you a specific stream concept and offer you some exampl
 You will often find 2 different types of interactive actions:
 
 - **🎭 PLAY** : commands or instructions you should spend some time with to get familiar with some concepts or APIs
+
 - **🏹 Exercise**: when you have to use some of the concepts you just learned to solve a programming problem. Generally every exercise will have a test that you can run to validate your solution.
 
 
 Enjoy! 🙃
+
 
 [➡️ GET STARTED](01-buffer-vs-stream/README.md).
 
@@ -46,13 +47,11 @@ If you use Docker, `npm install` is automatically run for you every time you lau
 
 ## Shameless plug 😇
 
-If you like this piece of work, consider supporting me by getting a copy of [Node.js Design Patterns, Second Edition](http://amzn.to/2bB58Ic), which also goes into great depth about Streams and related design patterns.
+If you like this piece of work, consider supporting me by getting a copy of [Node.js Design Patterns, Third Edition](https://www.nodejsdesignpatterns.com/), which also goes into great depth about Streams and related design patterns.
 
-[![Node.js Design Patterns, Second Edition by Mario Casciaro and Luciano Mammino](./node-js-design-patterns.png)](http://amzn.to/2bB58Ic)
+[![Node.js Design Patterns, Third Edition by Mario Casciaro and Luciano Mammino](./node-js-design-patterns.png)](https://www.nodejsdesignpatterns.com/)
 
-Buy on [Amazon.com](http://amzn.to/2bB58Ic) - [Amazon.co.uk](http://amzn.to/2bddyWq) - [Packtpub](https://www.packtpub.com/web-development/nodejs-design-patterns-second-edition) - [O'Reilly](http://shop.oreilly.com/product/9781785885587.do)
-
-If you already have this book, **please consider writing a review** on Amazon, Packt, GoodReads or in any other review channel that you generally use.
+If you already have this book, **please consider writing a review** on Amazon, Packt, GoodReads or in any other review channel that you generally use. That would support us greatly 🙏.
 
 
 ## Contributing

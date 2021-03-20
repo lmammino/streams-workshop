@@ -1,4 +1,4 @@
-FROM node:12.4.0-alpine
+FROM node:14.16-alpine
 
 RUN apk update && apk upgrade && apk add bash vim nano
 

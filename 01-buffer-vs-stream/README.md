@@ -10,30 +10,66 @@
 
 ## 01.1 buffers intro
 
-Let's create a Node.js script to copy a file from one place to another:
+What is a buffer?
+
+Buffers are an abstraction that allows us to deal with raw binary data in Node.js! They are particularly relevant when we are dealing with files and networks or I/O in general.
+
+Let's create some buffers with some data:
+
+```javascript
+// buffer-data.js
+
+// Let's create some buffers with some data
+const bufferFromString = Buffer.from('Ciao human')
+const bufferFromByteArray = Buffer.from([67, 105, 97, 111, 32, 104, 117, 109, 97, 110])
+const bufferFromHex = Buffer.from('4369616f2068756d616e', 'hex')
+const bufferFromBase64 = Buffer.from('Q2lhbyBodW1hbg==', 'base64')
+
+// data is stored in binary format
+console.log(bufferFromString) // <Buffer 43 69 61 6f 20 68 75 6d 61 6e>
+console.log(bufferFromByteArray) // <Buffer 43 69 61 6f 20 68 75 6d 61 6e>
+console.log(bufferFromHex) // <Buffer 43 69 61 6f 20 68 75 6d 61 6e>
+console.log(bufferFromBase64) // <Buffer 43 69 61 6f 20 68 75 6d 61 6e>
+
+// Raw buffer data can be "visualized" in hex and base64
+console.log(bufferFromString.toString('utf-8')) // Ciao human ('utf-8' is the default)
+console.log(bufferFromString.toString('hex')) // 4369616f2068756d616e
+console.log(bufferFromString.toString('base64')) // Q2lhbyBodW1hbg==
+```
+
+Now, let's create a Node.js script to copy a file from one place to another using buffers:
 
 ```javascript
 // buffer-copy.js
 
-const {
-  readFileSync,
-  writeFileSync
-} = require('fs')
+import {
+  readFile,
+  writeFile
+} from 'fs/promises'
+
+async function copyFile (src, dest) {
+  // read entire file content
+  const content = await readFile(src)
+  // write that content somewhere else
+  return writeFile(dest, content)
+}
 
 // `src` is the first argument from cli, `dest` the second
 const [,, src, dest] = process.argv
 
-// read entire file content
-const content = readFileSync(src)
-
-// write that content somewhere else
-writeFileSync(dest, content)
+// start the copy and handle the result
+copyFile(src, dest)
+  .then(() => console.log(`${src} copied into ${dest}`))
+  .catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
 ```
 
 You can use this script as follows:
 
 ```bash
-node buffer-copy <source-file> <dest-file>
+node buffer-copy.js <source-file> <dest-file>
 ```
 
 > **🎭 PLAY**  
@@ -56,7 +92,7 @@ What happens is that you should see your script dramatically failing with the fo
 ERR_FS_FILE_TOO_LARGE: File size is greater than possible Buffer
 ```
 
-Why is this happening?
+Why is this happening? 😱
 
 Essentially because when we use `fs.readFileSync` we load all the binary content from the file in memory using a `Buffer` object. Buffers are, by design, limited in size as they live in memory.
 
@@ -81,6 +117,19 @@ So what can he do? What if he wants to find an approach that works independently
 Mario can move the blocks one by one, he can stream them!
 
 
+**Tip**: You can create a buffer with the maximum allowed size with the following code:
+
+```javascript
+// biggest-buffer.js
+
+import buffer from 'buffer'
+
+// Careful, this will allocate a few GBs of memory!
+const biggestBuffer = Buffer.alloc(buffer.constants.MAX_LENGTH) // creates a buffer with the maximum possible size
+console.log(biggestBuffer) // <Buffer 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ... 4294967245 more bytes>
+```
+
+
 ## 01.2 Streaming intro
 
 How can we convert our copy file implementation into a streaming one?
@@ -90,10 +139,10 @@ It's very easy actually:
 ```javascript
 // stream-copy.js
 
-const {
+import {
   createReadStream,
   createWriteStream
-} = require('fs')
+} from 'fs'
 
 const [,, src, dest] = process.argv
 
