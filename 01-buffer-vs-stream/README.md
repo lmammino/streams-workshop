@@ -117,17 +117,17 @@ So what can he do? What if he wants to find an approach that works independently
 Mario can move the blocks one by one, he can stream them!
 
 
-**Tip**: You can create a buffer with the maximum allowed size with the following code:
-
-```javascript
-// biggest-buffer.js
-
-import buffer from 'buffer'
-
-// Careful, this will allocate a few GBs of memory!
-const biggestBuffer = Buffer.alloc(buffer.constants.MAX_LENGTH) // creates a buffer with the maximum possible size
-console.log(biggestBuffer) // <Buffer 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ... 4294967245 more bytes>
-```
+> **✏️ Tip**: You can create a buffer with the maximum allowed size with the following code:
+> 
+> ```javascript
+> // biggest-buffer.js
+> 
+> import buffer from 'buffer'
+> 
+> // Careful, this will allocate a few GBs of memory!
+> const biggestBuffer = Buffer.alloc(buffer.constants.MAX_LENGTH) // creates a buffer with the maximum possible size
+> console.log(biggestBuffer) // <Buffer 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ... 4294967245 more bytes>
+> ```
 
 
 ## 01.2 Streaming intro
