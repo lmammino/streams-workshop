@@ -1,6 +1,4 @@
-'use strict'
-
-const { createHash } = require('crypto')
+import { createHash } from 'crypto'
 
 /**
  * Helper function to create properly sized keys from secrets of arbitrary length
@@ -15,9 +13,10 @@ function createCipherKey (secret) {
  * incoming data using the "aes256" algorithm and then compresses the resulting
  * data using gzip
  */
-function createEncgz (secret, iv) {
+export function createEncgz (secret, iv) {
   const cipherKey = createCipherKey(secret)
   // Add your code here...
+  console.log(cipherKey)
 }
 
 /**
@@ -26,12 +25,8 @@ function createEncgz (secret, iv) {
  * incoming data using gunzip, and then decrypts the data using the "aes256"
  * algorithm with the given secret and iv
  */
-function createDecgz (secret, iv) {
+export function createDecgz (secret, iv) {
   const cipherKey = createCipherKey(secret)
   // Add your code here...
-}
-
-module.exports = {
-  createEncgz,
-  createDecgz
+  console.log(cipherKey)
 }

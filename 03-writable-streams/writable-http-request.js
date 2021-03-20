@@ -1,10 +1,8 @@
-'use strict'
+import { request } from 'http'
 
-const http = require('http')
-
-const req = http.request(
+const req = request(
   {
-    hostname: 'enx6b07hdu6cs.x.pipedream.net',
+    hostname: 'enx6b07hdu6cs.x.pipedream.net', // get your URL at requestbin.com
     method: 'POST'
   },
   (resp) => {

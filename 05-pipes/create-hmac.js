@@ -1,7 +1,5 @@
-'use strict'
-
-const { createHmac } = require('crypto')
-const { createReadStream, createWriteStream } = require('fs')
+import { createHmac } from 'crypto'
+import { createReadStream, createWriteStream } from 'fs'
 
 const [,, filename, secret] = process.argv
 

@@ -11,7 +11,7 @@
   "engineStrict": true,
   "scripts": {
     "test:lint": "eslint .",
-    "test:unit": "jest",
+    "test:unit": "tap --no-esm */**/exercises/*.test.js",
     "test": "npm run test:lint && npm run test:unit"
   },
   "repository": {
@@ -31,14 +31,14 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
-    "jest": "^24.8.0",
-    "webpack": "^4.33.0",
-    "webpack-cli": "^3.3.3"
+    "sinon": "^9.2.4",
+    "tap": "^14.11.0"
   },
   "dependencies": {
+    "desm": "^1.1.0",
     "emoji": "^0.3.2",
     "mock-req": "^0.2.0",
-    "pumpify": "^1.5.1",
-    "readable-stream": "^3.4.0"
+    "pumpify": "^2.0.1",
+    "readable-stream": "^3.6.0"
   }
 }

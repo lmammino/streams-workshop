@@ -1,23 +1,18 @@
-'use strict'
+import { createReadStream } from 'fs'
+import { createGunzip } from 'zlib'
+import { join } from 'desm'
+import tap from 'tap'
 
-const testSuffix = process.env.TEST_SOLUTIONS ? '.solution.js' : ''
+import countBytesSolution from './count-bytes.solution.js'
+import countBytesTpl from './count-bytes.js'
 
-const { join } = require('path')
-const { createReadStream } = require('fs')
-const { createGunzip } = require('zlib')
-const countBytes = require('./count-bytes' + testSuffix)
+const countBytes = process.env.TEST_SOLUTIONS ? countBytesSolution : countBytesTpl
 
-test('It should count the right number of bytes', done => {
-  const filePath = join(__dirname, '..', '..', 'assets', 'moby-dick.txt.gz')
+tap.test('It should count the right number of bytes', async function (t) {
+  const filePath = join(import.meta.url, '..', '..', 'assets', 'moby-dick.txt.gz')
   const srcStream = createReadStream(filePath)
   const unzippedStream = srcStream.pipe(createGunzip())
 
-  countBytes(unzippedStream, (err, bytes) => {
-    if (err) {
-      throw err
-    }
-
-    expect(bytes).toBe(1234481)
-    done()
-  })
+  const bytes = await countBytes(unzippedStream)
+  t.equal(bytes, 1234481)
 })

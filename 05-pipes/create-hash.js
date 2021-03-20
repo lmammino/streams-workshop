@@ -1,7 +1,5 @@
-'use strict'
-
-const { createHash } = require('crypto')
-const { createReadStream, createWriteStream } = require('fs')
+import { createHash } from 'crypto'
+import { createReadStream, createWriteStream } from 'fs'
 
 const [,, filename] = process.argv
 

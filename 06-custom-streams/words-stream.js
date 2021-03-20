@@ -17,7 +17,7 @@ class WordsStream extends Transform {
     this.lastWord = words.pop()
 
     // emit every single word remaining in the array
-    for (let word of words) {
+    for (const word of words) {
       this.push(word)
     }
 

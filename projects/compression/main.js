@@ -1,8 +1,6 @@
-'use strict'
-
-const { createWriteStream } = require('fs')
-const { createGzip, createDeflate, createBrotliCompress } = require('zlib')
-const CountBytes = require('./count-bytes')
+import { createWriteStream } from 'fs'
+import { createGzip, createDeflate, createBrotliCompress } from 'zlib'
+import CountBytes from './count-bytes'
 
 const originalFileSize = new CountBytes()
 

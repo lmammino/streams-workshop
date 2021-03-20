@@ -1,8 +1,6 @@
-'use strict'
+import { Transform } from 'readable-stream'
 
-const { Transform } = require('readable-stream')
-
-class CountBytes extends Transform {
+export default class CountBytes extends Transform {
   constructor (options) {
     super(options)
     this.bytes = 0
@@ -18,5 +16,3 @@ class CountBytes extends Transform {
     done()
   }
 }
-
-module.exports = CountBytes

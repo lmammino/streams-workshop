@@ -1,14 +1,12 @@
-'use strict'
-
-const { createGzip, createGunzip } = require('zlib')
-const { createHash, createCipheriv, createDecipheriv } = require('crypto')
-const pumpify = require('pumpify')
+import { createGzip, createGunzip } from 'zlib'
+import { createHash, createCipheriv, createDecipheriv } from 'crypto'
+import pumpify from 'pumpify'
 
 function createCipherKey (secret) {
   return createHash('md5').update(secret).digest('hex')
 }
 
-function createEncgz (secret, iv) {
+export function createEncgz (secret, iv) {
   const cipherKey = createCipherKey(secret)
   const encryptStream = createCipheriv('aes256', cipherKey, iv)
   const gzipStream = createGzip()
@@ -18,16 +16,11 @@ function createEncgz (secret, iv) {
   return stream
 }
 
-function createDecgz (secret, iv) {
+export function createDecgz (secret, iv) {
   const cipherKey = createCipherKey(secret)
   const decryptStream = createDecipheriv('aes256', cipherKey, iv)
   const gunzipStream = createGunzip()
 
   const stream = pumpify(gunzipStream, decryptStream)
   return stream
-}
-
-module.exports = {
-  createEncgz,
-  createDecgz
 }

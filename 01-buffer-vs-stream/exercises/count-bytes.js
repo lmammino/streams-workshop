@@ -1,15 +1,14 @@
-'use strict'
-
 /*
   Exercise
 
   Write a function that receives a stream and counts the number of bytes in the stream.
 */
 
-const countBytes = (srcStream, cb) => {
-  // ... implement here the logic to count the number of bytes in the stream
-  // ... invoke the callback passing null (or an error) and the actual number when the stream is finished
-  return cb(null, 0)
+export default async function countBytes (srcStream) {
+  return new Promise((resolve, reject) => {
+    // ... implement here the logic to count the number of bytes in the stream
+    // ... invoke resolve passing the actual number of bytes when the stream is finished
+    // ... invoke reject in case of error to propagate the error
+    return resolve(0)
+  })
 }
-
-module.exports = countBytes

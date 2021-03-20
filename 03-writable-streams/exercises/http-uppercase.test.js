@@ -1,38 +1,38 @@
-'use strict'
+import MockReq from 'mock-req'
+import tap from 'tap'
+import sinon from 'sinon'
 
-const testSuffix = process.env.TEST_SOLUTIONS ? '.solution.js' : ''
+import makeServerSolution from './http-uppercase.solution.js'
+import makeServerTpl from './http-uppercase.js'
 
-const MockReq = require('mock-req')
-const server = require('./http-uppercase' + testSuffix)
+const makeServer = process.env.TEST_SOLUTIONS ? makeServerSolution : makeServerTpl
 
-test('it should respond with uppercasified body', (done) => {
+tap.test('it should respond with uppercasified body', function (t) {
+  const server = makeServer()
+
   const req = new MockReq({
     method: 'POST',
     url: '/',
     headers: {
-      'Accept': 'text/plain'
+      Accept: 'text/plain'
     }
   })
 
-  const res = {
-    write: jest.fn(() => false),
-    end: jest.fn(),
-    once: jest.fn((_, cb) => { cb() })
-  }
+  const res = sinon.spy({
+    write: () => false,
+    end: () => {},
+    once: (_, cb) => { cb() }
+  })
 
   server.emit('request', req, res)
   req.write('hello ')
   req.end('world')
 
   req.on('end', () => {
-    expect(res.write).toHaveBeenCalledWith('HELLO ')
-    expect(res.write).toHaveBeenCalledWith('WORLD')
-    try {
-      expect(res.once).toHaveBeenCalled()
-    } catch (err) {
-      return done(new Error('Are you handling backpressure?'))
-    }
-    expect(res.end).toHaveBeenCalled()
-    done()
+    const callArgs = res.write.getCalls().flatMap(x => x.args)
+    t.deepEqual(callArgs, ['HELLO ', 'WORLD'], 'Uppercasified the data in the request')
+    t.true(res.once.called, 'Handling backpressure')
+    t.true(res.end.calledOnce, 'Closing the response')
+    t.end()
   })
 })

@@ -1,8 +1,7 @@
-'use strict'
-
-const { createReadStream, createWriteStream } = require('fs')
+import { createReadStream, createWriteStream } from 'fs'
 
 const [, , src, dest] = process.argv
+
 const srcStream = createReadStream(src)
 const destStream = createWriteStream(dest)
 

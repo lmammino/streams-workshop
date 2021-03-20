@@ -35,6 +35,9 @@ console.log(bufferFromBase64) // <Buffer 43 69 61 6f 20 68 75 6d 61 6e>
 console.log(bufferFromString.toString('utf-8')) // Ciao human ('utf-8' is the default)
 console.log(bufferFromString.toString('hex')) // 4369616f2068756d616e
 console.log(bufferFromString.toString('base64')) // Q2lhbyBodW1hbg==
+
+// You can get the size of a buffer (in bytes) by using `length`
+console.log(bufferFromString.length) // 10
 ```
 
 Now, let's create a Node.js script to copy a file from one place to another using buffers:
@@ -115,6 +118,9 @@ So what can he do? What if he wants to find an approach that works independently
 ![Mario can move the blocks one by one, he can stream them!](./images/buffer-analogy-004.jpg)
 
 Mario can move the blocks one by one, he can stream them!
+
+
+In a way, we can think about streams as an abstraction that allows us to deal with portions of data (**chunks**) arriving at different moments in time. Every chunk is a `Buffer` instance.
 
 
 > **✏️ Tip**

@@ -1,12 +1,10 @@
-'use strict'
-
-const countBytes = (srcStream, cb) => {
-  let bytes = 0
-  srcStream.on('error', (err) => cb(err))
-  srcStream.on('end', () => cb(null, bytes))
-  srcStream.on('data', (chunk) => {
-    bytes += chunk.length
+export default async function countBytes (srcStream) {
+  return new Promise((resolve, reject) => {
+    let bytes = 0
+    srcStream.on('error', (err) => reject(err))
+    srcStream.on('end', () => resolve(bytes))
+    srcStream.on('data', (chunk) => {
+      bytes += chunk.length
+    })
   })
 }
-
-module.exports = countBytes

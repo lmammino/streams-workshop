@@ -1,5 +1,3 @@
-'use strict'
-
 /*
   Exercise
 
@@ -8,10 +6,8 @@
   try to figure out how to reconcile words spanning 2 chunks.
 */
 
-const countWords = (srcStream, cb) => {
+export default async function countWords (srcStream) {
   // ... implement here the logic to count the number of words in the stream
-  // ... invoke the callback passing null (or an error) and the actual number when the stream is finished
-  return cb(null, 0)
+  // ... return the actual number of words when the stream is finished
+  return 0
 }
-
-module.exports = countWords

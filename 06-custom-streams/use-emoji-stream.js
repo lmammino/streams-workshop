@@ -1,7 +1,7 @@
-'use strict'
+// 'use strict'
 
-const EmojiStream = require('./emoji-stream')
+// const EmojiStream = require('./emoji-stream')
 
-const emojiStream = new EmojiStream()
+// const emojiStream = new EmojiStream()
 
-emojiStream.pipe(process.stdout)
+// emojiStream.pipe(process.stdout)

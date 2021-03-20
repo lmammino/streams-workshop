@@ -1,12 +1,10 @@
-'use strict'
-
-const { Readable } = require('readable-stream')
+import { Readable } from 'readable-stream'
 
 /**
  * Implement a Readable stream that allows you to consume all numbers in the
  * fibonacci sequence that are smaller than a given max number
  */
-class FibStream extends Readable {
+export default class FibStream extends Readable {
   constructor (max = Number.MAX_SAFE_INTEGER, options) {
     super(options)
     this._max = max
@@ -15,7 +13,7 @@ class FibStream extends Readable {
   }
 
   _read () {
-    let nextVal = this._n2 === 0 ? 1 : this._n1 + this._n2
+    const nextVal = this._n2 === 0 ? 1 : this._n1 + this._n2
     const prevVal = this._n2
     this._n2 = nextVal
     this._n1 = prevVal
@@ -26,5 +24,3 @@ class FibStream extends Readable {
     // remember to emit the number as a string.
   }
 }
-
-module.exports = FibStream

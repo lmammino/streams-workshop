@@ -1,8 +1,6 @@
-'use strict'
+import { Readable } from 'readable-stream'
 
-const { Readable } = require('readable-stream')
-
-class DateStream extends Readable {
+export default class DateStream extends Readable {
   constructor (options = {}) {
     options.objectMode = true // forces object mode
     super(options)
@@ -12,5 +10,3 @@ class DateStream extends Readable {
     this.push(new Date())
   }
 }
-
-module.exports = DateStream

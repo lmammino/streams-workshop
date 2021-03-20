@@ -1,17 +1,13 @@
-'use strict'
-
-const countWords = async (srcStream, cb) => {
+export default async function countWords (srcStream) {
   let numWords = 0
   let lastWordFromPreviousChunk = ''
 
-  for await (let chunk of srcStream) {
+  for await (const chunk of srcStream) {
     const words = (lastWordFromPreviousChunk + chunk.toString()).split(/\s+/)
     lastWordFromPreviousChunk = words.pop()
 
     numWords += words.length
   }
 
-  return cb(null, numWords)
+  return numWords
 }
-
-module.exports = countWords

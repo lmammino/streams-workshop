@@ -1,9 +1,11 @@
-'use strict'
+import { Readable, Writable, pipeline } from 'readable-stream'
+import tap from 'tap'
+import * as solution from './encgz.solution.js'
+import * as tpl from './encgz.js'
 
-const testSuffix = process.env.TEST_SOLUTIONS ? '.solution.js' : ''
-
-const { Readable, Writable, pipeline } = require('readable-stream')
-const { createEncgz, createDecgz } = require('./encgz' + testSuffix)
+const [createEncgz, createDecgz] = process.env.TEST_SOLUTIONS
+  ? [solution.createEncgz, solution.createDecgz]
+  : [tpl.createEncgz, tpl.createDecgz]
 
 const SECRET = Buffer.from('Elbert Hubbard')
 const IV = Buffer.from('9fab79663db375c8439cc38ffa9239fd', 'hex')
@@ -58,7 +60,7 @@ const decrypt = async (encryptedData, secret, iv) => new Promise((resolve, rejec
   )
 })
 
-test('It encrypts and compress some data properly', (done) => {
+tap.test('It encrypts and compress some data properly', function (t) {
   const source = new BufferStream(CLEAN_DATA)
   const transform = createEncgz(SECRET, IV)
   const dest = new Accumulator()
@@ -75,13 +77,13 @@ test('It encrypts and compress some data properly', (done) => {
       const encryptedData = dest.getData()
       const decryptedData = await decrypt(encryptedData, SECRET, IV)
 
-      expect(decryptedData).toEqual(CLEAN_DATA)
-      done()
+      t.deepEqual(decryptedData, CLEAN_DATA)
+      t.end()
     }
   )
 })
 
-test('It decompress and decrypts some data properly', done => {
+tap.test('It decompress and decrypts some data properly', function (t) {
   const source = new BufferStream(ENCRYPTED_DATA)
   const transform = createDecgz(SECRET, IV)
   const dest = new Accumulator()
@@ -96,8 +98,8 @@ test('It decompress and decrypts some data properly', done => {
       }
 
       const data = dest.getData()
-      expect(data).toEqual(CLEAN_DATA)
-      done()
+      t.deepEqual(data, CLEAN_DATA)
+      t.end()
     }
   )
 })

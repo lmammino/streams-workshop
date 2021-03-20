@@ -1,23 +1,18 @@
-'use strict'
+import { createReadStream } from 'fs'
+import { createGunzip } from 'zlib'
+import { join } from 'desm'
+import tap from 'tap'
 
-const testSuffix = process.env.TEST_SOLUTIONS ? '.solution.js' : ''
+import countWordsSolution from './count-words.solution.js'
+import countWordsTpl from './count-words.js'
 
-const { join } = require('path')
-const { createReadStream } = require('fs')
-const { createGunzip } = require('zlib')
-const countWords = require('./count-words' + testSuffix)
+const countWords = process.env.TEST_SOLUTIONS ? countWordsSolution : countWordsTpl
 
-test('It should count the right number of words', done => {
-  const filePath = join(__dirname, '..', '..', 'assets', 'moby-dick.txt.gz')
+tap.test('It should count the right number of words', async function (t) {
+  const filePath = join(import.meta.url, '..', '..', 'assets', 'moby-dick.txt.gz')
   const srcStream = createReadStream(filePath)
   const unzippedStream = srcStream.pipe(createGunzip())
 
-  countWords(unzippedStream, (err, bytes) => {
-    if (err) {
-      throw err
-    }
-
-    expect(bytes).toBe(212793)
-    done()
-  })
+  const bytes = await countWords(unzippedStream)
+  t.equal(bytes, 212793)
 })

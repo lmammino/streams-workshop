@@ -1,10 +1,8 @@
-'use strict'
-
-const {
+import {
   createReadStream,
   createWriteStream
-} = require('fs')
-const { createGzip } = require('zlib')
+} from 'fs'
+import { createGzip } from 'zlib'
 
 const [, , src, dest] = process.argv
 const srcStream = createReadStream(src)

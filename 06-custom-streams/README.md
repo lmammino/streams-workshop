@@ -386,9 +386,9 @@ Guess what's going to be the output of this example! 😉
 
 ## 06.5 Conclusion
 
-This is everything for what concerns customs streams for now. Are you ready to move to the last section and talk about [streams in the browser](/07-streams-in-the-browser/README.md)?
+This is everything for what concerns customs streams for now. Are you ready to move to the last section and explore some interesting [projects to build using streams](/07-projects/README.md)?
 
 ---
 
-| [⬅️ 05 - Pipes](/05-pipes/README.md) | [🏠](/README.md)| [07 - Streams in the browser ➡️](/07-streams-in-the-browser/README.md)|
+| [⬅️ 05 - Pipes](/05-pipes/README.md) | [🏠](/README.md)| [07 - Projects ➡️](/07-projects/README.md)|
 |:--------------|:------:|------------------------------------------------:|
