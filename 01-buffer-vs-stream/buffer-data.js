@@ -10,7 +10,7 @@ console.log(bufferFromByteArray) // <Buffer 43 69 61 6f 20 68 75 6d 61 6e>
 console.log(bufferFromHex) // <Buffer 43 69 61 6f 20 68 75 6d 61 6e>
 console.log(bufferFromBase64) // <Buffer 43 69 61 6f 20 68 75 6d 61 6e>
 
-// Raw buffer data can be "visualized" in hex and base64
+// Raw buffer data can be "visualized" as a string, as hex or base64
 console.log(bufferFromString.toString('utf-8')) // Ciao human ('utf-8' is the default)
 console.log(bufferFromString.toString('hex')) // 4369616f2068756d616e
 console.log(bufferFromString.toString('base64')) // Q2lhbyBodW1hbg==

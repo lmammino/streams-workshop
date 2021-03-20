@@ -1,14 +1,14 @@
 # 01 - Buffer vs Stream
 
-- [01.1 buffers intro](#011-buffers-intro)
+- [01.1 Buffers intro](#011-buffers-intro)
 - [01.2 Streaming intro](#012-streaming-intro)
-- [01.3 Memory comparison](#013-memory-comparison)
+- [01.3 Memory comparison / Time comparison](#013-memory-comparison---time-comparison)
 - [01.4 Our friend `Buffer`](#014-our-friend-buffer)
 - [01.5 Our new friend stream](#015-our-new-friend-stream)
 - [01.6 Summary](#016-summary)
 
 
-## 01.1 buffers intro
+## 01.1 Buffers intro
 
 What is a buffer?
 
@@ -31,7 +31,7 @@ console.log(bufferFromByteArray) // <Buffer 43 69 61 6f 20 68 75 6d 61 6e>
 console.log(bufferFromHex) // <Buffer 43 69 61 6f 20 68 75 6d 61 6e>
 console.log(bufferFromBase64) // <Buffer 43 69 61 6f 20 68 75 6d 61 6e>
 
-// Raw buffer data can be "visualized" in hex and base64
+// Raw buffer data can be "visualized" as a string, as hex or base64
 console.log(bufferFromString.toString('utf-8')) // Ciao human ('utf-8' is the default)
 console.log(bufferFromString.toString('hex')) // 4369616f2068756d616e
 console.log(bufferFromString.toString('base64')) // Q2lhbyBodW1hbg==
@@ -72,13 +72,13 @@ copyFile(src, dest)
 You can use this script as follows:
 
 ```bash
-node buffer-copy.js <source-file> <dest-file>
+node 01-buffer-vs-stream/buffer-copy.js <source-file> <dest-file>
 ```
 
 > **🎭 PLAY**  
 > Play with this a bit and try to copy some files in your machine.
 
-But did you ever wonder what happens when you try to copy a big file (more than 1.5Gb)?
+But did you ever wonder what happens when you try to copy a big file (let's say about 3Gb)?
 
 > **🎭 PLAY**  
 > Generate a big file (3gb) called `assets/3Gb.bin` in your machine with:
@@ -87,41 +87,22 @@ But did you ever wonder what happens when you try to copy a big file (more than 
 > head -c $((3*1024*1024*1024)) /dev/urandom > assets/3Gb.bin
 > ```
 >
+> Be patient, this might take a bit...
 > Now try to copy it with our previous script.
 
 What happens is that you should see your script dramatically failing with the following error:
 
 ```plain
-ERR_FS_FILE_TOO_LARGE: File size is greater than possible Buffer
+RangeError [ERR_FS_FILE_TOO_LARGE]: File size (3221225472) is greater than 2 GB
+    at readFileHandle (internal/fs/promises.js:273:11)
+    at async copyFile (file:///.../streams-workshop/01-buffer-vs-stream/buffer-copy.js:8:19) {
+  code: 'ERR_FS_FILE_TOO_LARGE'
+}
 ```
 
 Why is this happening? 😱
 
-Essentially because when we use `fs.readFileSync` we load all the binary content from the file in memory using a `Buffer` object. Buffers are, by design, limited in size as they live in memory.
-
-Let's try to explain this better with an analogy...
-
-Imagine that, instead of copying bytes of data, you are using Mario to move blocks from one place to another:
-
-![Mario trying to move some blocks](./images/buffer-analogy-001.jpg)
-
-Mario can lift some blocks:
-
-![Mario can lift some blocks](./images/buffer-analogy-002.jpg)
-
-But, if he has to move many blocks, he can't definitely move all of them in one go:
-
-![Mario can't move many blocks in one go](./images/buffer-analogy-003.jpg)
-
-So what can he do? What if he wants to find an approach that works independently from the number of blocks he has to move?
-
-![Mario can move the blocks one by one, he can stream them!](./images/buffer-analogy-004.jpg)
-
-Mario can move the blocks one by one, he can stream them!
-
-
-In a way, we can think about streams as an abstraction that allows us to deal with portions of data (**chunks**) arriving at different moments in time. Every chunk is a `Buffer` instance.
-
+Essentially because when we use `fs.readFile` we load all the binary content from the file in memory using a `Buffer` object. Buffers are, by design, limited in size as they live in memory.
 
 > **✏️ Tip**
 >
@@ -136,6 +117,29 @@ In a way, we can think about streams as an abstraction that allows us to deal wi
 > const biggestBuffer = Buffer.alloc(buffer.constants.MAX_LENGTH) // creates a buffer with the maximum possible size
 > console.log(biggestBuffer) // <Buffer 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ... 4294967245 more bytes>
 > ```
+
+Let's try to explain this better with an analogy...
+
+Imagine that, instead of copying bytes of data, you are using Mario to move blocks from one place to another:
+
+![Mario trying to move some blocks](./images/buffer-analogy-001.jpg)
+
+Mario can lift some blocks:
+
+![Mario can lift some blocks](./images/buffer-analogy-002.jpg)
+
+But, if he has to move many blocks, he can't definitely move all of them in one go; Mario's strength is limited:
+
+![Mario can't move many blocks in one go](./images/buffer-analogy-003.jpg)
+
+So what can he do? What if he wants to find an approach that works independently from the number of blocks he has to move?
+
+![Mario can move the blocks one by one, he can stream them!](./images/buffer-analogy-004.jpg)
+
+Mario can move the blocks one by one, he can stream them!
+
+
+In a way, we can think about streams as an abstraction that allows us to deal with portions of data (**chunks**) arriving at different moments in time. Every chunk is a `Buffer` instance.
 
 
 ## 01.2 Streaming intro
@@ -166,21 +170,33 @@ const destStream = createWriteStream(dest)
 srcStream.on('data', (chunk) => destStream.write(chunk))
 ```
 
-Essentially we are replacing `readFileSync` with `createReadStream` and `writeFileSync` with `createWriteStream`.
+Essentially we are replacing `readFile` with `createReadStream` and `writeFile` with `createWriteStream`.
 
-`createReadStream` and `createWriteStream` are then used to create two stream instances `srcStream` and `destStream`. These objects are respectively instances of a `ReadableStream` (input) and a `WritableStream` (output) and we will talk more in detail about these in the next chapters. For now, the only important detail to understand is that streams are not *eager*, they don't read all the data in one go. The data is read in *chunks*, small portions of data. You can immediately use a chunk as soon as it is available through the `data` event. In our case, when a new chunk of data is available in the source stream we immediately write it to the destination stream. This way we never have to keep all the file content in memory.
+`createReadStream` and `createWriteStream` are then used to create two stream instances `srcStream` and `destStream`.
 
-This implementation here is not perfect, there are some rough edge cases that we will discover later while discussing Writable streams in more detail, but for now this is good enough to understand the basic principles of stream processing in Node.js!
+These objects are respectively instances of a `ReadableStream` (input) and a `WritableStream` (output) and we will talk more in detail about these in the next chapters.
+
+For now, the only important detail to understand is that streams are not *eager*, they don't read all the data in one go. The data is read in *chunks*, small portions of data. You can immediately use a chunk as soon as it is available through the `data` event. In our case, when a new chunk of data is available in the source stream we immediately write it to the destination stream. This way we never have to keep all the file content in memory.
+
+Keep in mind that this implementation here is not bullet-proof, there are some rough edge cases that we will discover later while discussing Writable streams in more detail, but for now this is good enough to understand the basic principles of stream processing in Node.js!
 
 > **🎭 PLAY**  
 > Try to copy our `3Gb.bin` using this new streaming implementation!
 
 
-## 01.3 Memory comparison
+## 01.3 Memory / Time comparison
 
-Let's now see how the two implementations (buffer and streaming) compare in terms of memory usage. We can do that by using Google Chrome developer tools.
+Let's now see how the two implementations (buffer and streaming) compare in terms of memory usage and execution time.
 
-First of all let's create a 600Mb file called `assets/600mb.bin`:
+One way that we can see how much data is being allocated in buffers by a Node.js script is by calling:
+
+```javascript
+process.memoryUsage().arrayBuffers
+```
+
+This will give us the number of bytes allocated for buffers.
+
+Before we can start to do some tests let's create a 600Mb file called `assets/600mb.bin`:
 
 ```bash
 head -c $((600*1024*1024)) /dev/urandom > assets/600mb.bin
@@ -188,50 +204,92 @@ head -c $((600*1024*1024)) /dev/urandom > assets/600mb.bin
 
 This might take few minutes... be patient, please.
 
-Now let's run the buffer copy in debug mode:
+Now I have prepared some "modified" versions of our buffer and stream copy scripts that will output the allocated buffer size every 100ms while the copy is in progress.
+
+If you are curious to look at source files you can checkout [`buffer-copy-profile.js`](./buffer-copy-profile.js) and [`stream-copy-profile.js`](./stream-copy-profile.js).
+
+Finally we can run the following command to see how the buffer based implementation behaves:
 
 ```bash
-node --inspect-brk=0.0.0.0:9229 01-buffer-vs-stream/buffer-copy.js assets/600mb.bin assets/600mb.bin_copy
+time node 01-buffer-vs-stream/buffer-copy-profile.js assets/600mb.bin assets/600mb.bin_copy
 ```
 
-This script will pause straight away thanks to the `--inspect-brk` flag.
+With this command we should see something similar to the following output:
 
-Open Google Chrome and visit [chrome://inspect/](chrome://inspect/).
+```plain
+   43.7545 Mb
+   87.5985 Mb
+  136.0218 Mb
+  181.0432 Mb
+  229.0107 Mb
+  272.5029 Mb
+  317.6631 Mb
+  364.3407 Mb
+  410.5568 Mb
+  455.7325 Mb
+  498.7198 Mb
+  545.6628 Mb
+  589.6431 Mb
+  ...
+  600.3535 Mb
+  600.6088 Mb
+  600.3667 Mb
+  600.3263 Mb
+  600.5572 Mb
+  600.7419 Mb
+  600.2206 Mb
+  600.4537 Mb
+  600.7435 Mb
+  600.2381 Mb
+assets/600mb.bin copied into assets/600mb.bin_copy
 
-Click on the **inspect** link at the bottom of the page.
+real	0m4.321s
+user	0m1.864s
+sys	0m2.133s
+```
 
-This should open a Chrome developer tool window.
+As expected the buffered version is allocating around 600 Mb of data in memory (the entire file!).
 
-> **Note:** if you are using Docker, this might not work straight away and you might not see the link. If you have any issue, don't worry, just keep reading and move along. There are ways to get this working in docker, but it gets a bit too complicated. So, if you are short of time, it's best to skip trying this, as this is not the core of the workshop.
+If we run the stream version instead:
 
-You can see that our script is currently paused. Add a breakpoint in the last line where we write the content to the destination (so that the script will stop before executing that last line). Now execute the script and see it getting paused in the last line by the breakpoint. At this point, switch to the **Memory** tab and select the option **Heap Snapshoot** and then click the button **Take Snapshot**. This operation allows you to see all the memory currently allocated by the Node.js process.
+```bash
+time node 01-buffer-vs-stream/stream-copy-profile.js assets/600mb.bin assets/600mb.bin_copy
+```
 
-![Debugging memory with Chrome Dev Tools](./images/chrome-dev-tools-memory.gif)
+In this case we should see something like:
 
-If all went as expected you should see that the total amount of memory is around 600Mb. Not surprising right? If we load all the content of the file in a buffer, the content of the file is essentially loaded all in memory!
+```plain
+    0.1344 Mb
+    3.5719 Mb
+    8.2594 Mb
+   10.3219 Mb
+   16.1969 Mb
+   20.1344 Mb
+   10.0719 Mb
+   16.5719 Mb
+    2.6969 Mb
+    2.6969 Mb
+   16.5094 Mb
+    1.9469 Mb
+    7.5719 Mb
+    4.0094 Mb
+    2.8844 Mb
+   11.1969 Mb
+    2.2594 Mb
+    9.3219 Mb
+assets/600mb.bin copied into assets/600mb.bin_copy
 
-> **🎭 PLAY**  
-> Try to do the same with our streaming alternative to find out how much memory is used!
->
-> Advice: since the streaming approach is asynchronous is hard to put a meaningful breakpoint. In order to make things easy, you can add the following line at the end of the code:
->
-> ```javascript
-> srcStream.on('end', () => destStream.end())
-> destStream.on('finish', () => {
->   console.log('done')
-> })
-> ```
->
-> Now you can add the breakpoint in the `console.log` line
+real	0m1.984s
+user	0m0.574s
+sys	0m1.248s
+```
 
-How much memory did you get?
+Note how with the streaming approach we are never allocating more than a few Mbs of data. The script was almost twice as fast to complete!
 
 > **🎭 PLAY**  
 > Why not to try the same exercise with the 3Gb file?
 
 At this point you should have clear in mind why Streams are so convenient 🙂
-
-> **Note:** if you are using Docker, and couldn't manage to get this working, the gist of it is that the buffered approach will consume at least as much memory as the amount of data you are copying, while the streaming approach keeps a constant memory footprint (about 4kb) regardless on how much data you are copying around.
 
 
 ## 01.4 Our friend `Buffer`
