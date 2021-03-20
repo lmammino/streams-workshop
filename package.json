@@ -11,8 +11,9 @@
   "engineStrict": true,
   "scripts": {
     "test:lint": "eslint .",
-    "test:unit": "tap --no-esm */**/exercises/*.test.js",
-    "test": "npm run test:lint && npm run test:unit"
+    "test:unit": "tap --no-esm --no-coverage --jobs=1 --reporter=spec */**/exercises/*.test.js",
+    "test": "npm run test:lint && npm run test:unit",
+    "ex": "tap --no-esm --no-coverage --jobs=1 --reporter=spec"
   },
   "repository": {
     "type": "git",

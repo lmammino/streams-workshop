@@ -2,7 +2,7 @@
 
 - [01.1 Buffers intro](#011-buffers-intro)
 - [01.2 Streaming intro](#012-streaming-intro)
-- [01.3 Memory comparison / Time comparison](#013-memory-comparison---time-comparison)
+- [01.3 Memory / Time comparison](#013-memory--time-comparison)
 - [01.4 Our friend `Buffer`](#014-our-friend-buffer)
 - [01.5 Our new friend stream](#015-our-new-friend-stream)
 - [01.6 Summary](#016-summary)
@@ -284,7 +284,7 @@ user	0m0.574s
 sys	0m1.248s
 ```
 
-Note how with the streaming approach we are never allocating more than a few Mbs of data. The script was almost twice as fast to complete!
+Note how with the streaming approach we are never allocating more than a few Mbs of data. Moreover, this version of the script was twice as fast to complete compared to the previous implementation!
 
 > **🎭 PLAY**  
 > Why not to try the same exercise with the 3Gb file?
@@ -298,10 +298,10 @@ The `Buffer` object is such a fundamental concept in Node.js and it's heavily us
 
 In its essence a Buffer is a data structure that allows us to manage raw binary data.
 
-The most common way to create a buffer from scratch is by using the `.from` method:
+As we saw at the beginning of this lesson, the most common way to create a buffer from scratch is by using the `.from` method:
 
 ```javascript
-const a = Buffer.from('Hello') // data from a utf8 string
+const a = Buffer.from('Hello') // data from a utf-8 string
 const b = Buffer.from('48656c6c6f', 'hex') // data from an hex string
 const c = Buffer.from('SGVsbG8=', 'base64') // data from a base64 encoded binary sequence
 const d = Buffer.from([0x48, 0x65, 0x6c, 0x6c, 0x6f]) // data from an array of integers (bytes)
@@ -329,7 +329,7 @@ You will see something like this:
 }
 ```
 
-Which is the proof that, internally, a buffer is represented as an array of bytes.
+Which is naother proof that, internally, a buffer is simply an array of bytes.
 
 Another common way to create a buffer instance is `Buffer.alloc(n)` that allows you to create an empty buffer (all zeros) of `n` bytes.
 
@@ -392,7 +392,7 @@ For now there are only 2 important things to keep in mind about streams instance
 > You can edit the file and run an interactive test session to validate your implementation with:
 >
 > ```bash
-> npm test -- 01-buffer-vs-stream/exercises/count-bytes.test.js
+> npm run ex -- 01-buffer-vs-stream/exercises/count-bytes.test.js
 > ```
 >
 > If you really struggle with this, you can have a look at [`count-bytes.solution.js`](/01-buffer-vs-stream/exercises/count-bytes.solution.js) for a possible solution.
