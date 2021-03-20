@@ -1,5 +1,7 @@
 # streams-workshop
 
+[![Node.js CI](https://github.com/lmammino/streams-workshop/actions/workflows/node.js.yml/badge.svg)](https://github.com/lmammino/streams-workshop/actions/workflows/node.js.yml)
+
 A workshop on Node.js Streams by Luciano Mammino ([@loige](https://twitter.com/loige)). 🤓
 
 
