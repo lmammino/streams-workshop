@@ -49,7 +49,7 @@ If you use Docker, `npm install` is automatically run for you every time you lau
 
 If you like this piece of work, consider supporting me by getting a copy of [Node.js Design Patterns, Third Edition](https://www.nodejsdesignpatterns.com/), which also goes into great depth about Streams and related design patterns.
 
-[![Node.js Design Patterns, Third Edition by Mario Casciaro and Luciano Mammino](./node-js-design-patterns.png)](https://www.nodejsdesignpatterns.com/)
+[![Node.js Design Patterns, Third Edition by Mario Casciaro and Luciano Mammino](./node-js-design-patterns.jpg)](https://www.nodejsdesignpatterns.com/)
 
 If you already have this book, **please consider writing a review** on Amazon, Packt, GoodReads or in any other review channel that you generally use. That would support us greatly 🙏.
 
