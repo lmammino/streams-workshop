@@ -19,7 +19,7 @@ A Duplex stream is essentially a stream that is both Readable and Writable. It i
 
  - Compression / Decompression
  - Encryption / Decryption
- - Data filtering
+ - Data filtering and aggregation
  - Data enrichment
  - Media transcoding
 

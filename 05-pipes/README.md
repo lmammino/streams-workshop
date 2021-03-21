@@ -19,9 +19,9 @@ readable.pipe(writable)
 
 Here `.pipe` will do all these amazing things for you:
 
- - Connects the Readable stream to the Writable stream: all the data read from `readable` is *automagically™️* written to the `writable` in a streaming fashion.
- - Handles the `end` event properly, once all the data is copied over the writable, that is properly closed.
- - It returns a new instance of a stream so that you can keep using `.pipe` to connect many streams together. This is mostly useful with transform streams.
+ - Connects the Readable stream to the Writable stream: all the data read from `readable` is *automagically™️* copied over the `writable` stream, chunk by chunk.
+ - Handles the `end` event properly, once all the data is copied over the writable, both readable and writable are properly closed.
+ - It returns a new instance of a stream so that you can keep using `.pipe` to connect many streams together. This is mostly useful with transform streams and it allows us to create complex pipelines for data processing.
 
 Ok, let's say now that we want to introduce a Transform stream in between our Readable and Writable stream. We call our streams `readable`, `transform` and `writable`, this is how you can connect them in a nice pipeline:
 
@@ -72,11 +72,11 @@ Let's now try to use this module to implement the `stream-copy-gzip`, but this t
 ```javascript
 // stream-copy-gzip-pipe.js
 
-const {
+import {
   createReadStream,
   createWriteStream
-} = require('fs')
-const { createGzip } = require('zlib')
+} from 'fs'
+import { createGzip } from 'zlib'
 
 const [, , src, dest] = process.argv
 const srcStream = createReadStream(src)
@@ -104,16 +104,16 @@ Encrypt a file:
 ```javascript
 // stream-copy-encrypt.js
 
-const {
+import {
   createReadStream,
   createWriteStream
-} = require('fs')
+} from 'fs'
 
-const {
+import {
   randomBytes,
   createHash,
   createCipheriv
-} = require('crypto')
+} from 'crypto'
 
 const [, , src, dest, secret] = process.argv
 
@@ -140,8 +140,8 @@ Create the SHA hash of a file:
 ```javascript
 // create-hash.js
 
-const { createHash } = require('crypto')
-const { createReadStream, createWriteStream } = require('fs')
+import { createHash } from 'crypto'
+import { createReadStream, createWriteStream } from 'fs'
 
 const [,, filename] = process.argv
 
@@ -159,8 +159,8 @@ Create the HMAC (signature) of a file with a given secret:
 ```javascript
 // create-hmac.js
 
-const { createHmac } = require('crypto')
-const { createReadStream, createWriteStream } = require('fs')
+import { createHmac } from 'crypto'
+import { createReadStream, createWriteStream } from 'fs'
 
 const [,, filename, secret] = process.argv
 
@@ -198,6 +198,7 @@ We said that every time we call `.pipe`, it will return a new instance of a stre
 ```javascript
 
 readableFileStream
+  .on('error', handleErr)
   .pipe(decompressStream)
   .on('error', handleErr)
   .pipe(decryptStream)
@@ -212,7 +213,7 @@ readableFileStream
   .on('error', handleErr)
 
 function handleError (err) {
-  // ... print the error and destroy all the streams to avoid resources and memory leaking
+  // ... print the error and destroy all the streams to avoid leaking resources and memory
   console.error(err)
   readableFileStream.destroy()
   decompressStream.destroy()
@@ -235,7 +236,7 @@ stream.pipeline(...streams, callback)
 We can pass an arbitrary number of streams followed by a callback function. The streams get piped in order and the callback is called when all the processing is done or in case there's an error. If there's an error all the streams are properly ended and destroyed form you. So with this utility we could rewrite our previous example as follows:
 
 ```javascript
-const { pipeline } = require('stream')
+import { pipeline } from 'stream'
 
 pipeline(
   readableFileStream,
@@ -260,6 +261,25 @@ pipeline(
 
 **Note**: `stream.pipeline` is available only from Node.js 10, so if you are using an earlier version of Node.js or if you are not sure in which environment your code is going to run, you can use the NPM module [`pump`](http://npm.im/pump), which does exactly what pump does.
 
+> **✏️ TIP**
+>
+> In Node.js v15.0.0 you can also use a variation of `pipeline` (from the `stream/promises` package) that returns a `Promise`, which is ideal when you are using `async/await`:
+>
+> ```javascript
+> import { pipeline } from 'stream/promises'
+>
+> // ... in a given async function
+> try {
+>   await pipeline(
+>     readableStream,
+>     transformStream,
+>     writableStream,
+>   )
+> } catch (err) {
+>   // handle errors
+> }
+> ```
+
 
 ## 05.4 Composability and `pumpify`
 
@@ -274,7 +294,7 @@ But what if our business logic is made of several Transform streams chained toge
 In those cases you can use the module [`pumpify`](http://npm.im/pumpify) from NPM, which you can use as follows:
 
 ```javascript
-const pumpify = require('pumpify')
+import pumpify from 'pumpify'
 
 // ... create all the stream instances here
 
@@ -286,7 +306,7 @@ const myTransformPipeline = pumpify(
   compressStream
 )
 
-module.exports = myTransformPipeline
+export default myTransformPipeline
 ```
 
 The great thing about `pumpify` is that, if one of the streams closes or generates an error,
@@ -308,7 +328,7 @@ all the streams in the pipeline will be destroyed.
 > You can edit the file and run an interactive test session to validate your implementation with:
 >
 > ```bash
-> npm test -- 05-pipes/exercises/encgz.test.js
+> npm run ex -- 05-pipes/exercises/encgz.test.js
 > ```
 >
 > If you really struggle with this, you can have a look at [`encgz.solution.js`](/05-pipes/exercises/encgz.solution.js) for a possible solution.
