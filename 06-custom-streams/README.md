@@ -82,10 +82,9 @@ You can see how this stream works with the following snippet of code:
 ```javascript
 // use-emoji-stream.js
 
-const EmojiStream = require('./emoji-stream')
+import EmojiStream from './emoji-stream.js'
 
 const emojiStream = new EmojiStream()
-
 emojiStream.pipe(process.stdout)
 ```
 
@@ -307,41 +306,42 @@ dateStream
 In short, to create a new Transform stream without having to extend the `Transform` class, we have to pass to the `Transform` constructor a `transform` function that follows exactly the same signature as the `_transform` from the class extension alternative.
 
 > **🎭 PLAY**  
-> Try to use the script above and maybe change the transformation logic a bit. It doesn't have to be a JSON to be able to push to standard output. As long as the transformation is producing strings or buffers, standard output will accept it. What if we want to format the dates in a more human readable way?
+> Try to use the script above and maybe change the transformation logic a bit. It doesn't have to be a JSON to be able to push to standard output. As long as the transformation is producing strings or buffers, standard output will accept it. What if we want to format the dates in a more human readable way? If you are curious, you can check out an idea by looking at [`extract-seconds.js`](./extract-seconds.js).
 
 
 ## 06.4 Custom Writable streams
 
-Let's see now how to create a custom Writable stream. I am sure it will come with no surprise that, in order to accomplish this, we just have to extend the `Writable` class and implement the `_write` method. `_write` takes in the same parameters as `_transform`, but in this case it doesn't make much sense to call `this.push` within that method, writable are the last step of the pipeline.
+Creating custom writable streams is actually something you would rarely have to do. The standard writable streams from `fs`, `http` and `net` are most often everything you need to solve your daily coding challenges.
 
-So what if we want to create a Writable stream that appends elements to the browser DOM? It might look more or less like this:
+You might want to create a writable stream when you are implementing a library that needs to receive data in a streaming fashion and save it somewhere. For instance that could be a custom object storage like AWS S3, or a custom logging backend or even a streaming interface to send data to a relational database (e.g. SQLite), a queueing system (e.g RabbitMQ) or a stream processing system (e.g. Kafka or Redis Streams).
+
+Ok, if you really want to create a custom Writable stream let's see how to do that!
+
+I am sure that, at this point, it will come with no surprise that, in order to accomplish this, we just have to extend the `Writable` class and implement the `_write` method. `_write` takes in the same parameters as `_transform`, but in this case it doesn't make much sense to call `this.push` within that method, writable are the last step of the pipeline.
+
+The simplest example we can come up with is a writable stream that actually writes to the standard output using `console.log`:
 
 ```javascript
-// dom-append.js
+// console-writable.js
 
-const { Writable } = require('readable-stream')
+import { Writable } from 'readable-stream'
 
-class DOMAppend extends Writable {
+export default class DOMAppend extends Writable {
   _write (chunk, encoding, done) {
-    const elem = document.createElement('li')
-    const content = document.createTextNode(chunk.toString())
-    elem.appendChild(content)
-    document.getElementById('list').appendChild(elem)
+    console.log(chunk.toString())
     done()
   }
 }
-
-module.exports = DOMAppend
 ```
 
 One interesting thing here is that the backpressure signal is automatically handled for you by the `write` method from the base `Writable` class. In reality the `write` method is the public interface, users will never have to call `_write` directly. `_write` is called internally by `write`, which wrappes it with some useful extra logic, like the one needed to report backpressure.
 
-Of course Writable streams can be created using the shorthand syntax as well. Let's see here how to create a Writable stream that essentially allows us to accumulate all the streaming data in a string. Just to warn you, this is not a great pattern as it defeats the purpose of streaming data, but it's ok in some cases like testing or when you are sure the amount of data produced through the stream is very small:
+Of course, Writable streams can be created using the shorthand syntax as well. Let's see here how to create a Writable stream that essentially allows us to accumulate all the streaming data in a string. Just to warn you, this is not a great pattern as it defeats the purpose of streaming data, but it's ok in some cases like testing or when you are sure the amount of data produced through the stream is very small:
 
 ```javascript
 // write-to-string.js
 
-const { Writable } = require('readable-stream')
+import { Writable } from 'readable-stream'
 
 let content = ''
 const stringWritable = new Writable({
@@ -369,7 +369,7 @@ Guess what's going to be the output of this example! 😉
 > You can edit the file and run an interactive test session to validate your implementation with:
 >
 > ```bash
-> npm test -- 06-custom-streams/exercises/write-to-array.test.js
+> npm run ex -- 06-custom-streams/exercises/write-to-array.test.js
 > ```
 >
 > If you really struggle with this, you can have a look at [`write-to-array.solution.js`](/06-custom-streams/exercises/write-to-array.solution.js) for a possible solution.
