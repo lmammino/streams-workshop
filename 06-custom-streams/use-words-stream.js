@@ -1,9 +1,7 @@
-// 'use strict'
+import WordsStream from './words-stream.js'
 
-// const WordsStream = require('./words-stream')
+const wordsStream = new WordsStream()
 
-// const wordsStream = new WordsStream()
-
-// process.stdin
-//   .pipe(wordsStream)
-//   .pipe(process.stdout)
+process.stdin
+  .pipe(wordsStream)
+  .pipe(process.stdout)

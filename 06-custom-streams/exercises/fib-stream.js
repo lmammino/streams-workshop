@@ -19,8 +19,8 @@ export default class FibStream extends Readable {
     this._n1 = prevVal
 
     // complete the implementation from here
-    // make sure you call this.push with the correct value
+    // make sure you call `this.push()` with the correct value
     // and that you also terminate the stream correctly.
-    // remember to emit the number as a string.
+    // Note: remember to emit the number as a string!
   }
 }

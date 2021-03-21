@@ -1,17 +1,13 @@
-// 'use strict'
+import { Transform } from 'readable-stream'
 
-// const { Transform } = require('readable-stream')
+export default class SeparatorStream extends Transform {
+  constructor (separator = '\n', options = {}) {
+    super(options)
+    this.separator = separator
+  }
 
-// class SeparatorStream extends Transform {
-//   constructor (separator = '\n', options = {}) {
-//     super(options)
-//     this.separator = separator
-//   }
-
-//   _transform (chunk, enc, cb) {
-//     this.push(chunk.toString() + this.separator)
-//     cb()
-//   }
-// }
-
-// module.exports = SeparatorStream
+  _transform (chunk, enc, cb) {
+    this.push(chunk.toString() + this.separator)
+    cb()
+  }
+}

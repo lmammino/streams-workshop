@@ -1,11 +1,9 @@
-// 'use strict'
+import { Readable } from 'readable-stream'
 
-// const { Readable } = require('readable-stream')
+const endlessN = new Readable({
+  read () {
+    this.push(Math.random() + '\n')
+  }
+})
 
-// const endlessN = new Readable({
-//   read () {
-//     this.push(Math.random() + '\n')
-//   }
-// })
-
-// endlessN.pipe(process.stdout)
+endlessN.pipe(process.stdout)

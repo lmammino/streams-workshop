@@ -1,12 +1,8 @@
-// 'use strict'
+import { Transform } from 'readable-stream'
 
-// const { Transform } = require('readable-stream')
-
-// class Uppercasify extends Transform {
-//   _transform (chunk, encoding, done) {
-//     this.push(chunk.toString().toUpperCase())
-//     done()
-//   }
-// }
-
-// module.exports = Uppercasify
+export default class Uppercasify extends Transform {
+  _transform (chunk, encoding, done) {
+    this.push(chunk.toString().toUpperCase())
+    done()
+  }
+}

@@ -1,8 +1,6 @@
-'use strict'
+import { Transform } from 'readable-stream'
 
-const { Transform } = require('readable-stream')
-
-class WordsStream extends Transform {
+export default class WordsStream extends Transform {
   constructor (options) {
     super(options)
     this.lastWord = ''
@@ -11,7 +9,7 @@ class WordsStream extends Transform {
   _transform (chunk, enc, cb) {
     // prepends the last word to the new data
     const newData = this.lastWord + chunk.toString()
-    const words = newData.split(/[^a-zA-Z]+/)
+    const words = newData.split(/\W+/)
 
     // removes the last word in the chunk
     this.lastWord = words.pop()
@@ -32,5 +30,3 @@ class WordsStream extends Transform {
     cb()
   }
 }
-
-module.exports = WordsStream

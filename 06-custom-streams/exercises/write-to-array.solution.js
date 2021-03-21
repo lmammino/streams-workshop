@@ -1,21 +1,17 @@
-// 'use strict'
+import { Writable } from 'readable-stream'
 
-// const { Writable } = require('readable-stream')
+export default class WriteToArray extends Writable {
+  constructor (options) {
+    super(options)
+    this.data = []
+  }
 
-// class WriteToArray extends Writable {
-//   constructor (options) {
-//     super(options)
-//     this.data = []
-//   }
+  _write (chunk, enc, done) {
+    this.data.push(chunk.toString())
+    done()
+  }
 
-//   _write (chunk, enc, done) {
-//     this.data.push(chunk.toString())
-//     done()
-//   }
-
-//   getData () {
-//     return this.data
-//   }
-// }
-
-// module.exports = WriteToArray
+  getData () {
+    return this.data
+  }
+}

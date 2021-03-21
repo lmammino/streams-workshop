@@ -17,12 +17,12 @@ The name is actually a bit misleading, as the module contains all the code from 
 
 Another interesting property of this module is that it makes Node.js streams compatible with the browser, which means that you can use module bundlers such as Webpack and Broswserify to obtain JavaScript code using streams that can run in the browser.
 
-So from now on, we are going to replace all the `require('stream')` with `require('readable-stream')`.
+So from now on, we are going to replace all the `import stream from 'stream'` with `import stream from 'readable-stream'`.
 
 
 ## 06.2 Custom Readable streams
 
-Creating custom readable streams can be useful to be able to use streaming primitives to consume data from custom sources or from sources from which Node.js doesn't provide a built-in module by default.
+Creating custom readable streams can be useful to be able to use streaming primitives to consume data from custom sources or from sources for which Node.js doesn't provide a built-in module by default.
 
 For instance you might want to create a custom Readable stream to read a lot of data from your favorite database, or maybe you can create a readable stream that provides endless random data which might be useful for fuzzy testing, or why not, a Readable stream that allows you to consume the list of all the available emojis and their description!
 
@@ -31,6 +31,8 @@ Yeah, this last one sounds like fun, let's actually do this!
 So to create a custom Readable stream we have to extend the `Readable` class and implement the `_read()` method, which is going to look somehow like this:
 
 ```javascript
+import { Readable } from 'readable-stream'
+
 class EmojiStream extends Readable {
   _read() {
     // ...
@@ -40,44 +42,39 @@ class EmojiStream extends Readable {
 
 If your stream instance is stateful you will probably have to add a constructor. If you do that make sure you add `options` as part of the accepted arguments and call `super(options)` in the constructor. This is necessary to make sure that the stream is initialized correctly and to also allow more experienced users to tweak some stream parameters.
 
-Inside the `_read()` method, you can use `this.push(data)` to emit chunks of data (strings or buffers). You call `this.push(null)` when the stream is over.
+Inside the `_read()` method, you can use `this.push(data)` to emit chunks of data (strings or buffers). You call `this.push(null)` to indicate that the stream is over.
 
 So let's see how to implement our emoji stream:
 
 ```javascript
 // emoji-stream.js
 
-const { EMOJI_MAP } = require('emoji') // from npm
-const { Readable } = require('readable-stream') // from npm
+import emoji from 'emoji'
+import { Readable } from 'readable-stream'
 
-const emojis = Object.keys(EMOJI_MAP)
+const emojis = Object.keys(emoji.EMOJI_MAP)
 
 function getEmojiDescription (index) {
-  return EMOJI_MAP[emojis[index]][1]
+  return emoji.EMOJI_MAP[emojis[index]][1]
 }
 
 function getMessage (index) {
   return emojis[index] + ' ' + getEmojiDescription(index)
 }
 
-class EmojiStream extends Readable {
+export default class EmojiStream extends Readable {
   constructor (options) {
     super(options)
-    // we use this to keep track of the next emoji to emit from the emoji array
     this._index = 0
   }
 
   _read () {
-    // if no more emojis are left, the stream is over
     if (this._index >= emojis.length) {
       return this.push(null)
     }
-    // emit the current emoji
     return this.push(getMessage(this._index++))
   }
 }
-
-module.exports = EmojiStream
 ```
 
 You can see how this stream works with the following snippet of code:
@@ -102,10 +99,10 @@ For instance let's create a stream that outputs an endless sequence of random nu
 ```javascript
 // endless-numbers.js
 
-const { Readable } = require('readable-stream')
+import { Readable } from 'readable-stream'
 
 const endlessN = new Readable({
-  read() {
+  read () {
     this.push(Math.random() + '\n')
   }
 })
@@ -115,16 +112,16 @@ endlessN.pipe(process.stdout)
 
 There's a little sweet feature of streams that I haven't mentioned yet and that's maybe a good time to explore now... Streams are not limited to emit buffers or strings, they can also emit objects!
 
-In order to do that, you have to set the option `objectMode` to `true` from the constructor. Be careful that also all the streams you pipe to will need to have `objectMode` set to `true` for the objects to be able to flow across them. For this reason we cannot pipe a stream in object mode directly to `process.stdout`.
+In order to do that, you have to set the option `objectMode` to `true` from the constructor. Be careful that also all the streams you pipe this stream to will need to have `objectMode` set to `true` so the objects can flow across them. For this reason we cannot pipe a stream in object mode directly to `process.stdout`.
 
 For instance we could build a `DateStream` that emits a new `Date` object every time we read from the stream:
 
 ```javascript
 // date-stream.js
 
-const { Readable } = require('readable-stream')
+import { Readable } from 'readable-stream'
 
-class DateStream extends Readable {
+export default class DateStream extends Readable {
   constructor (options = {}) {
     options.objectMode = true // forces object mode
     super(options)
@@ -134,8 +131,6 @@ class DateStream extends Readable {
     this.push(new Date())
   }
 }
-
-module.exports = DateStream
 ```
 
 We will see later how to use this stream in combination with a Transform stream.
@@ -151,7 +146,7 @@ We will see later how to use this stream in combination with a Transform stream.
 > You can edit the file and run an interactive test session to validate your implementation with:
 >
 > ```bash
-> npm test -- 06-custom-streams/exercises/fib-stream.test.js
+> npm run ex -- 06-custom-streams/exercises/fib-stream.test.js
 > ```
 >
 > If you really struggle with this, you can have a look at [`fib-stream.solution.js`](/06-custom-streams/exercises/fib-stream.solution.js) for a possible solution.
@@ -169,26 +164,24 @@ Custom Transform streams can be very useful in a variety of situations, and they
 
 Just to give you some ideas of possible cases where it could make sense to implement custom Transform streams, here's a list:
 
- - Convert the data from one format to another, for instance make a text uppercase;
+ - Convert the data from one format to another, for instance make a text uppercase or convert a CSV file to a JSON file;
  - Filter the incoming data and ignore chunks that are not relevant, for instance ignore all the negative numbers, push all the others;
- - Stringify objects in an object stream so that they can be piped to a file or the standard output;
- - Batch multiple chunks together to avoid multiple writes over expensive backends.
+ - Stringify (or serialize) objects in an object stream so that they can be piped to a file or the standard output;
+ - Batch multiple chunks together to reduce the number of write calls over an expensive backend.
 
 Let's actually see how to implement the uppercasify stream:
 
 ```javascript
 // uppercasify.js
 
-const { Transform } = require('readable-stream')
+import { Transform } from 'readable-stream'
 
-class Uppercasify extends Transform {
+export default class Uppercasify extends Transform {
   _transform (chunk, encoding, done) {
     this.push(chunk.toString().toUpperCase())
     done()
   }
 }
-
-module.exports = Uppercasify
 ```
 
 That was easy! 😎
@@ -197,9 +190,9 @@ Sometimes though, Transform streams might get a little bit more complicated as y
 
 This problem might also present itself in (apparently) simpler cases. For instance, let's imagine we want to write a Transform stream that gets arbitrary text in, but pushes individual words out. This kind of stream will essentially allow us to consume pieces of texts word by word. This is a great primitive if you want to create a program that can extract the most common words out of a text.
 
-Why is this tricky? Because chunks are emitted once an arbitrary amount of bytes is reached, there's no semantic about individual words, so you might end up with a truncated word at the end of any given chunk. How do you solve this?
+Why is this tricky? Because chunks are emitted once an arbitrary amount of bytes is reached, there's no semantic that keeps individual words in the same chunk, so you might end up with a truncated word at the end of any given chunk. How do we solve this?
 
-One way to address this challenge might be to take all the words in the current chunk and push them out, except the last one (as this might be truncated). We have to retain the last word and wait for the next chunk. Once the next chunk arrives we can prepand the remainder word from the previous chunk to the new one.
+One way to address this challenge might be to take all the words in the current chunk and push them out, except the last one (as this is the only one that might be truncated). We have to retain the last word and wait for the next chunk. Once the next chunk arrives we can prepand the remainder word from the previous chunk to the new one.
 
 This approach makes sense and it should work, but there's still a problem. Once the source stream is over, you might still have data buffered from the last chunk. How do we emit that?
 
@@ -210,9 +203,9 @@ With these new ideas in mind let's see a possible implementation for the `WordsS
 ```javascript
 // words-stream.js
 
-const { Transform } = require('readable-stream')
+import { Transform } from 'readable-stream'
 
-class WordsStream extends Transform {
+export default class WordsStream extends Transform {
   constructor (options) {
     super(options)
     this.lastWord = ''
@@ -221,13 +214,13 @@ class WordsStream extends Transform {
   _transform (chunk, enc, cb) {
     // prepends the last word to the new data
     const newData = this.lastWord + chunk.toString()
-    const words = newData.split(/[^a-zA-Z]+/)
+    const words = newData.split(/\W+/)
 
     // removes the last word in the chunk
     this.lastWord = words.pop()
 
     // emit every single word remaining in the array
-    for (let word of words) {
+    for (const word of words) {
       this.push(word)
     }
 
@@ -242,8 +235,6 @@ class WordsStream extends Transform {
     cb()
   }
 }
-
-module.exports = WordsStream
 ```
 
 We can play with this stream with the following script:
@@ -251,7 +242,7 @@ We can play with this stream with the following script:
 ```javascript
 // use-words-stream.js
 
-const WordsStream = require('./words-stream')
+import WordsStream from './words-stream.js'
 
 const wordsStream = new WordsStream()
 
@@ -263,14 +254,14 @@ process.stdin
 If we run this script as follows:
 
 ```bash
-node use-words-stream < README.md
+node use-words-stream.js < README.md
 ```
 
 You will see that the output will look more or less like this:
 
-> CustomStreamsThereadablestreammodulethereadablestreammoduleCustomReadablestreamscustomreadablestreamsCustomTransformstreamscustomtransformstreamsCustomWritablestreamscustomwritablestreamsConclusionconclusionThereadablestreammoduleAveryusefulmodulefromNPMwhenitcomestowritecustomstreamsisreadablestreamhttpnpmimreadablestreamThismodulecontainsacopyofthelatestversionofNodejsstreamlibrarythiswayyoucanalwaysusethelateststreamfeaturesregardlessofwhatversionofNodejsisrunningyourcodeThisalsohelpsmakingstreambehaviorsalittlebitmorestableandpredictableastherehavebeenseveralchangesinthelibraryovertheyearsThenameisactuallyabitmisleadingasthemodulecontainsallthecodefromthenativestreammodulenotjustthepartrelatedtoReadablestreamsAnotherinterestingpropertyofthismoduleisthatitmakesNodejsstreamscompatiblewiththebrowserwhichmeansthatyoucanusemodulebundlerssuchasWebpackandBroswserifytoobtainJavaScriptcodeusingstreamsthatcanruninthebrowserSofromnowonwearegoingtoreplacealltherequirestreamwithrequirereadablestreamCustomReadablestreamsCreatingcustomreadablestreamscanbeusefultobeabletousestreamingprimitivestoconsumedatafromcustomsourcesorfromsourcesfromwhichNodejsdoesntprovideabuiltinmodulebydefaultForinstanceyoumightwanttocreateacustomReadablestreamtoreadalotofdatafromyourfavoritedatabaseormaybeyoucancreateareadablestreamthatprovidesendlessrandomdatawhichmightbeusefulforfuzzytestingorwhynotaReadablestreamthatallowsyoutoconsumethelistofalltheavailableemojisandtheirdescriptionYeahthislastonesoundslikefunletsactuallydothisSotocreateacustomReadablestreamwehavetoextendtheReadableclassandimplementthereadmethodwhichisgoingtolooksomehowlikethisjavascriptclassEmojiStreamextendsReadablereadIfyourstreaminstanceisstatefulyouwillprobablyhavetoaddaconstructorIfyoudothat...
+> streamsworkshopNodejsCIhttpsgithubcomlmamminostreamsworkshopactionsworkflowsnodejsymlbadgesvghttpsgithubcomlmamminostreamsworkshopactionsworkflowsnodejsymlAworkshoponNodejsStreamsbyLucianoMamminoloigehttpstwittercomloigePrerequisitesBeforegettingstartedmakesureyouhavethefollowingprerequisitesinyoursystemNodejs1416NPM690atexteditorofyourchoiceabashcompatibleshellifyouuseWindowsyoucaninstallbashhttpswwwwindowscentralcomhowinstallbashshellcommandlinewindows10oruseDockerasdescribedbelowusingdockerGettingstartedClonetherepositoryandrunnpminstalltogetallthenecessarydependenciesTheworkshopisdividedinchaptersandthefirstchapterstartsat01buffervsstream01buffervsstreamREADMEmdEverychapterwillteachyouaspecificstreamconceptandofferyousomeexamplesandexercisestofamiliarizewiththatconceptYouwilloftenfind2differenttypesofinteractiveactionsPLAYcommandsorinstructionsyoushouldspendsometimewithtogetfamiliarwithsomeconceptsorAPIsExercise...
 
-Essentially, just pushing all the chunks blindly to the standard output concatenates all of them together!
+Essentially, just pushing all the chunks blindly to the standard output, concatenates all of them together!
 
 Ideally we would need another Transform stream piped before the standard output that can add a separator, for instance a new line, to the current chunk.
 
@@ -283,7 +274,7 @@ Ideally we would need another Transform stream piped before the standard output 
 > You can edit the file and run an interactive test session to validate your implementation with:
 >
 > ```bash
-> npm test -- 06-custom-streams/exercises/separator-stream.test.js
+> npm run ex -- 06-custom-streams/exercises/separator-stream.test.js
 > ```
 >
 > If you really struggle with this, you can have a look at [`separator-stream.solution.js`](/06-custom-streams/exercises/separator-stream.solution.js) for a possible solution.
@@ -294,10 +285,10 @@ Ideally we would need another Transform stream piped before the standard output 
 We saw that you can create custom instances of Readable streams by just calling `new Readable`. You can do the same with Transform streams. For instance this is how you can build a Transform stream that applies `JSON.stringify` to the chunks in flight and use it in combination with an instance of the class `DateStream` that we built previously:
 
 ```javascript
-// infinite-date-stream
+// use-date-stream
 
-const { Transform } = require('readable-stream')
-const DateStream = require('./date-stream')
+import { Transform } from 'readable-stream'
+import DateStream from './date-stream.js'
 
 const dateStream = new DateStream()
 const jsonify = new Transform({
