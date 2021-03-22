@@ -95,8 +95,8 @@ I hope you had fun with this workshop and that you also acquired some new practi
 
 If you want to keep learning about Node.js streams and stream processing in general, these are some interesting books:
 
- - [Node.js Design Patterns, Second Edition](http://amzn.to/2bB58Ic): has an entire chapter dedicated to streams and related design patterns (disclaimer: this is my book!)
- - [Node Cookbook](https://www.packtpub.com/web-development/node-cookbook-third-edition): a great book with a lot of advices to get your Node.js more production ready, including one entire chapter dedicated to streams.
+ - [Node.js Design Patterns, Third Edition](https://www.nodejsdesignpatterns.com/): has an entire chapter dedicated to streams and related design patterns (disclaimer: I co-authored this book!)
+ - [Node Cookbook](https://www.packtpub.com/product/node-cookbook-fourth-edition/9781838558758): a great book with a lot of advices to get your Node.js more production ready, including one entire chapter dedicated to streams.
  - [Streaming Systems](http://streamingsystems.net/): a non-Node.js book that goes in depth about the challenges of building stream processing systems. Great if you want to understand more about the broader topic of distributed stream processing.
 
 Let me know what you are going to build with your new stream knowledge on [Twitter](https://twitter.com/loige) and if you have some spare minutes, please fill [**my feedback form**](https://loige.link/streams-workshop-feedback) :)
