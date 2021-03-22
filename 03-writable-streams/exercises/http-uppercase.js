@@ -7,5 +7,14 @@ import { createServer } from 'http'
 export default function makeServer () {
   return createServer((req, res) => {
     // ... write your code here
+
+    // read the source data with
+    // req.on('data', (chunk) => {})
+
+    // write the response with
+    // res.write(chunk)
+    // remember to uppercasify and to handle backpressure
+
+    // when req is finished we need to end the response
   })
 }

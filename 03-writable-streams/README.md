@@ -115,7 +115,7 @@ But how do we know when it's ok to write again? A writable stream will emit a `d
 ```javascript
 function backpressureAwareCopy(srcStream, destStream) {
   srcStream.on('data', (chunk) => {
-    const canContinue = destStream.write
+    const canContinue = destStream.write(chunk)
     if (!canContinue) {
       // if we are overflowing the destination, we stop reading
       srcStream.pause()
@@ -199,7 +199,7 @@ But now you are aware! So, I would encourage you to look more under the hood of 
 > You can edit the file and run an interactive test session to validate your implementation with:
 >
 > ```bash
-> npm test -- 03-writable-streams/exercises/http-uppercase.test.js
+> npm run ex -- 03-writable-streams/exercises/http-uppercase.test.js
 > ```
 >
 > If you really struggle with this, you can have a look at [`http-uppercase.solution.js`](/03-writable-streams/exercises/http-uppercase.solution.js) for a possible solution.
