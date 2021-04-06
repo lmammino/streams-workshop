@@ -233,7 +233,7 @@ The utility is called [`stream.pipeline`](https://nodejs.org/api/stream.html#str
 stream.pipeline(...streams, callback)
 ```
 
-We can pass an arbitrary number of streams followed by a callback function. The streams get piped in order and the callback is called when all the processing is done or in case there's an error. If there's an error all the streams are properly ended and destroyed form you. So with this utility we could rewrite our previous example as follows:
+We can pass an arbitrary number of streams followed by a callback function. The streams get piped in order and the callback is called when all the processing is done or in case there's an error. If there's an error all the streams are properly ended and destroyed for you. So with this utility we could rewrite our previous example as follows:
 
 ```javascript
 import { pipeline } from 'stream'
@@ -259,7 +259,7 @@ pipeline(
 > **🎭 PLAY**  
 > Try to rewrite one of the examples above using `stream.pipeline`, rather than `.pipe`
 
-**Note**: `stream.pipeline` is available only from Node.js 10, so if you are using an earlier version of Node.js or if you are not sure in which environment your code is going to run, you can use the NPM module [`pump`](http://npm.im/pump), which does exactly what pump does.
+**Note**: `stream.pipeline` is available only from Node.js 10, so if you are using an earlier version of Node.js or if you are not sure in which environment your code is going to run, you can use the NPM module [`pump`](http://npm.im/pump), which does exactly what pipeline does.
 
 > **✏️ TIP**
 >
