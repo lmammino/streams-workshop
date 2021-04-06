@@ -23,7 +23,7 @@ sourceStream.pipe(compressionStream2)
 sourceStream.pipe(compressionStream3)
 ```
 
-This way you don't have to *clone* the data from the source stream as many times as many compresison algorithms.
+This way you don't have to *clone* the data from the source stream as many times as many compression algorithms.
 
 Behind the scenes, what's happening here is that the 3 compression streams will be listening for the same `data` events on the `sourceStream`.
 

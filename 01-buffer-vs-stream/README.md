@@ -380,7 +380,7 @@ Streams are the topic of this workshop, so we will definitely go into great dept
 
 For now there are only 2 important things to keep in mind about streams instances:
 
-- Every stream is an event emitter (we already saw the `data` and the `end` events)
+- Every stream is an event emitter (we already saw the `data` event)
 - In the `streamInstance.on('data', (chunk) => {})` event, `chunk` is a buffer instance that contains the current portion of the data being read from the source
 
 > **🏹 Exercise** ([count-bytes.js](/01-buffer-vs-stream/exercises/count-bytes.js))
