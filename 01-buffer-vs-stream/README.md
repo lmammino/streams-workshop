@@ -329,7 +329,7 @@ You will see something like this:
 }
 ```
 
-Which is naother proof that, internally, a buffer is simply an array of bytes.
+Which is another proof that, internally, a buffer is simply an array of bytes.
 
 Another common way to create a buffer instance is `Buffer.alloc(n)` that allows you to create an empty buffer (all zeros) of `n` bytes.
 
